@@ -7,6 +7,7 @@ from .core import LANGS, script
 
 # Deterministic greetings keep short utterances usable even on a cold start.
 GREETINGS = {
+    'السلام': ('aeb','arabic','عسلامة! لاباس؟ كيفاش نجم نعاونك؟','عسلامة! لاباس؟ كيفاش نجم نعاونك؟'),
     'ahla bik': ('aeb','arabizi','Ahla bik! Labes? Kifech najjem n3awnek?','أهلا بيك! لاباس؟ كيفاش نجم نعاونك؟'),
     'ahla': ('aeb','arabizi','Ahla! Kifech najjem n3awnek?','أهلا! كيفاش نجم نعاونك؟'),
     '3aslema': ('aeb','arabizi','3aslema! Kifech najjem n3awnek?','عسلامة! كيفاش نجم نعاونك؟'),

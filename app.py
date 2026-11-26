@@ -1,19 +1,36 @@
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")
-import tempfile, os, base64, time
+import tempfile, os, base64, time, threading, logging
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from dalila.semantic import understand
 from dalila.voice import synthesize_reference
 from dalila.core import analyze, LANGS
-from dalila.engines import route_asr, speak, packaged_voice_available, VOICE_MAP
+from dalila.engines import route_asr, speak, packaged_voice_available, VOICE_MAP, warm_asr, general_asr_key
 from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
+from dalila import neural_voice
 
-app = FastAPI(title="Dalila Language Lab", version="0.6.0")
+app = FastAPI(title="Dalila Language Lab", version="0.7.0")
 ROOT = Path(__file__).parent
+WARM_STATUS='not_started'
+
+@app.on_event('startup')
+def prepare_local_models():
+    if os.getenv('DALILA_PREPARE_MODELS','0')!='1': return
+    def prepare():
+        global WARM_STATUS
+        WARM_STATUS='loading'
+        try:
+            warm_asr()
+            WARM_STATUS='ready'
+        except Exception as exc:
+            WARM_STATUS='unavailable'
+            logging.getLogger(__name__).warning('ASR prewarm: %s',type(exc).__name__)
+        neural_voice.prepare_all()
+    threading.Thread(target=prepare,daemon=True,name='dalila-model-preparation').start()
 
 
 def _cloud_allowed():
@@ -71,6 +88,9 @@ def capabilities():
         'semantic_backend': backend,
         'voice_reply': bool(packaged_voice_available() or os.name=='nt' or __import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
         'packaged_tts': packaged_voice_available(),
+        'neural_tts': neural_voice.readiness(),
+        'general_asr': general_asr_key(),
+        'asr_warmup': WARM_STATUS,
         'tts_language_map': VOICE_MAP,
         'version': app.version,
         'ollama_model': installed_ollama_model() if backend == 'ollama' else None,

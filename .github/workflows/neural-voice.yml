@@ -1,0 +1,22 @@
+name: Real neural voice smoke test
+on:
+  pull_request:
+    paths:
+      - 'dalila/neural_voice.py'
+      - 'requirements-neural-tts.txt'
+      - 'neural_smoke.py'
+      - '.github/workflows/neural-voice.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthesize:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements-neural-tts.txt "huggingface-hub>=0.34,<2"
+      - run: python neural_smoke.py

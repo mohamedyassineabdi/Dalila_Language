@@ -94,3 +94,32 @@ def test_uncertain_asr_refines(monkeypatch):
     monkeypatch.setattr(engines,'transcribe',transcribe)
     monkeypatch.setattr('dalila.semantic.detect',lambda text:{'label':'aeb','best_guess':'aeb'})
     assert engines.route_asr('fake')['model']=='tn-small' and calls==['small','tn-small']
+
+
+def test_fast_base_english(monkeypatch):
+    monkeypatch.setenv('DALILA_GENERAL_ASR','base')
+    calls=[]
+    def transcribe(path,key,language):
+        calls.append(key)
+        return {'text':'Hello','asr_language':'en','language_probability':.98,'avg_logprob':-.15,'model':key}
+    monkeypatch.setattr(engines,'transcribe',transcribe)
+    assert engines.route_asr('fake')['model']=='base' and calls==['base']
+
+def test_uncertain_base_general(monkeypatch):
+    monkeypatch.setenv('DALILA_GENERAL_ASR','base')
+    calls=[]
+    def transcribe(path,key,language):
+        calls.append(key)
+        return {'text':'Hello','asr_language':'en','language_probability':.5,'avg_logprob':-.9,'model':key}
+    monkeypatch.setattr(engines,'transcribe',transcribe)
+    assert engines.route_asr('fake')['model']=='small' and calls==['base','small']
+
+def test_base_preserves_tunisian_specialist(monkeypatch):
+    monkeypatch.setenv('DALILA_GENERAL_ASR','base')
+    calls=[]
+    def transcribe(path,key,language):
+        calls.append(key)
+        return {'text':'نحب نعرف شنوة يلزمني','asr_language':'ar','avg_logprob':-.1,'model':key}
+    monkeypatch.setattr(engines,'transcribe',transcribe)
+    monkeypatch.setattr('dalila.semantic.detect',lambda text:{'label':'aeb','best_guess':'aeb'})
+    assert engines.route_asr('fake')['model']=='tn-small' and calls==['base','tn-small']
