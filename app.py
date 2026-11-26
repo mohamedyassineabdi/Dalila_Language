@@ -8,11 +8,11 @@ from pydantic import BaseModel, Field
 from dalila.semantic import understand
 from dalila.voice import synthesize_reference
 from dalila.core import analyze, LANGS
-from dalila.engines import route_asr, speak
+from dalila.engines import route_asr, speak, packaged_voice_available, VOICE_MAP
 from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
 
-app = FastAPI(title="Dalila Language Lab", version="0.5.0")
+app = FastAPI(title="Dalila Language Lab", version="0.6.0")
 ROOT = Path(__file__).parent
 
 
@@ -69,7 +69,9 @@ def capabilities():
     return {
         'default_language': 'auto',
         'semantic_backend': backend,
-        'voice_reply': bool(os.name=='nt' or __import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
+        'voice_reply': bool(packaged_voice_available() or os.name=='nt' or __import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
+        'packaged_tts': packaged_voice_available(),
+        'tts_language_map': VOICE_MAP,
         'version': app.version,
         'ollama_model': installed_ollama_model() if backend == 'ollama' else None,
         'research_voice_enabled': os.getenv('DALILA_ENABLE_RESEARCH_TTS', '0') == '1',

@@ -1,4 +1,4 @@
-import os,time,subprocess,shutil,threading
+import os,time,subprocess,shutil,threading,sys,importlib.util,wave
 from functools import lru_cache
 from pathlib import Path
 ASR={'tn-small':'TheBiggyBang/whisper-small-tunisian-derja-ct2','tn-whisperx':'montachouig/whisperX-tunisian','small':'small','turbo':'turbo','large-v3':'large-v3','tn-codeswitch':'oddadmix/Whisperv3-tunisian-codeswitch'}
@@ -85,20 +85,48 @@ try {
     return {'engine':'windows-sapi','voice':voice,'dialect_authentic':False}
 
 
+VOICE_MAP={'aeb':'ar','ar':'ar','arq':'ar','ayl':'ar','fr':'fr','en':'en','de':'de','tr':'tr'}
+
+def packaged_voice_available():
+    return importlib.util.find_spec('espeakng_loader') is not None
+
+def _valid_wave(output):
+    try:
+        with wave.open(str(output),'rb') as wav:
+            frames=wav.readframes(wav.getnframes())
+            return wav.getnframes()>0 and any(frames)
+    except (OSError,EOFError,wave.Error):
+        return False
+
+def _packaged_speech(text,voice,output):
+    p=subprocess.run([sys.executable,'-m','dalila.tts_worker',voice,str(Path(output).resolve())],
+        input=text.encode('utf-8'),capture_output=True,timeout=20,cwd=str(Path(__file__).resolve().parents[1]))
+    if p.returncode or not _valid_wave(output):
+        raise RuntimeError('Packaged offline voice failed')
+
 def speak(text,language,output):
-    # Generic local intelligibility baseline only; Arabic eSpeak is NOT Derja.
-    exe=shutil.which('espeak-ng') or shutil.which('espeak')
-    if language not in ('aeb','ar','arq','ayl','fr','en','de','tr'): raise ValueError('Unsupported language')
+    if language not in VOICE_MAP: raise ValueError('Unsupported language')
     if not text.strip() or len(text)>1200: raise ValueError('Speech text must be 1–1200 characters')
-    voice='ar' if language in ('aeb','ar','arq','ayl') else language
+    voice=VOICE_MAP[language]
     start=time.perf_counter()
+    # No OS voice installation needed for the packaged fallback.
+    attempts=[]
+    if packaged_voice_available():
+        attempts.append(('espeak-ng-packaged',lambda:_packaged_speech(text,voice,output)))
     if os.name=='nt':
+        attempts.append(('windows-sapi',lambda:_windows_speech(text,voice,output)))
+    exe=shutil.which('espeak-ng') or shutil.which('espeak')
+    if exe:
+        def cli():
+            p=subprocess.run([exe,'-v',voice,'-w',str(output),'--stdin'],input=text.encode('utf-8'),capture_output=True,timeout=20)
+            if p.returncode: raise RuntimeError('Voice unavailable')
+        attempts.append(('espeak',cli))
+    for engine,fn in attempts:
         try:
-            result=_windows_speech(text,voice,output)
-            return dict(result,generation_s=time.perf_counter()-start)
+            Path(output).unlink(missing_ok=True)
+            fn()
+            if not _valid_wave(output): raise RuntimeError('Invalid audio')
+            return {'engine':engine,'voice':voice,'requested_language':language,'dialect_authentic':False,'generation_s':time.perf_counter()-start}
         except (RuntimeError,OSError,subprocess.SubprocessError):
             Path(output).unlink(missing_ok=True)
-    if not exe: raise RuntimeError('No compatible offline server voice')
-    p=subprocess.run([exe,'-v',voice,'-w',str(output),'--stdin'],input=text.encode('utf-8'),capture_output=True,timeout=60)
-    if p.returncode or not Path(output).is_file() or Path(output).stat().st_size<=44: raise RuntimeError('Local TTS voice unavailable')
-    return {'engine':'espeak','voice':voice,'dialect_authentic':False,'generation_s':time.perf_counter()-start}
+    raise RuntimeError('No compatible offline voice generated audio')

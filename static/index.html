@@ -95,6 +95,10 @@
 const $ = id => document.getElementById(id);
 const chatLog = $('chatLog');
 const audioPlayer = new Audio();
+let playbackId=0;
+window.speechSynthesis?.getVoices();
+audioPlayer.controls=true; audioPlayer.hidden=true; audioPlayer.style.maxWidth='100%';
+$('statusLine').parentElement.after(audioPlayer);
 let history = [];
 let lastReply = null;
 let mediaRecorder = null;
@@ -127,7 +131,7 @@ async function api(path, body, form=false){
 async function loadCapabilities(){
   try{
     const c = await fetch('/capabilities').then(r=>r.json());
-    $('modeLine').textContent = `v${c.version || '0.5.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. Offline speech depends on installed voices.`;
+    $('modeLine').textContent = `v${c.version || '0.6.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. ${c.packaged_tts ? 'Multilingual offline voice package installed.' : 'Offline voices not yet confirmed.'}`;
     $('backend').value = 'auto';
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
@@ -138,6 +142,7 @@ async function sendText(languageHint=null,voiceTiming=null){
   setBusy(true);
   addBubble('user', text);
   $('messageBox').value='';
+  playbackId++; audioPlayer.pause(); audioPlayer.hidden=true; window.speechSynthesis?.cancel();
   lastReply=null;
   const started=performance.now();
   setStatus('Thinking…');
@@ -158,28 +163,41 @@ async function speakLast(reply=lastReply){
   if(!reply?.assistant_text){setStatus('No assistant reply yet.',true);return;}
   const speech=reply.speech_text;
   if(!speech){setStatus('No pronunciation-safe speech text available.',true);return;}
-  const started=performance.now();
-  const lang={aeb:'ar',arq:'ar',ayl:'ar',ar:'ar',fr:'fr',en:'en',de:'de',tr:'tr'}[reply.language];
+  const id=++playbackId, started=performance.now();
+  const current=()=>id===playbackId && lastReply===reply;
+  const locale={aeb:'ar-TN',arq:'ar-DZ',ayl:'ar-LY',ar:'ar',fr:'fr',en:'en',de:'de',tr:'tr'}[reply.language];
   const synth=window.speechSynthesis;
-  const local=synth && synth.getVoices().find(v=>v.localService && v.lang.toLowerCase().split('-')[0]===lang);
+  audioPlayer.pause(); audioPlayer.hidden=true;
+  synth?.cancel();
+  const candidates=(synth?.getVoices() || []).filter(v=>v.localService && v.lang.toLowerCase().split('-')[0]===locale?.split('-')[0]);
+  const local=candidates.find(v=>v.lang.toLowerCase()===locale.toLowerCase()) || candidates[0];
+  let fallbackStarted=false, timer;
+  async function serverVoice(){
+    if(!current() || fallbackStarted)return;
+    fallbackStarted=true;clearTimeout(timer);synth?.cancel();
+    setStatus('Preparing offline audio…');
+    try{
+      const r=await api('/speak',{text:speech,language:reply.language});
+      if(!current())return;
+      audioPlayer.src='data:audio/wav;base64,'+r.audio_base64;
+      audioPlayer.hidden=false;
+      try {
+        await audioPlayer.play();
+        if(current()&&!busy)setStatus('Playing '+r.voice+' offline voice · '+((performance.now()-started)/1000).toFixed(1)+' s.');
+      } catch(e) {
+        if(current())setStatus('Audio ready. Press play if automatic playback is blocked.');
+      }
+    }catch(e){if(current()&&!busy)setStatus('Offline voice unavailable for '+reply.language+'. See advanced details.',true);}
+  }
   if(local){
-    audioPlayer.pause(); synth.cancel();
     const u=new SpeechSynthesisUtterance(speech);
     u.voice=local;u.lang=local.lang;
-    u.onend=()=>{if(lastReply===reply && !busy)setStatus('Ready.');};
-    u.onerror=()=>{if(lastReply===reply && !busy)setStatus('Local voice unavailable. Text chat still works.',true);};
-    synth.speak(u);
-    if(lastReply===reply)setStatus('Playing offline browser voice (generic).');
-    return;
-  }
-  setStatus('Preparing offline audio…');
-  try{
-    const r=await api('/speak',{text:speech,language:reply.language});
-    if(lastReply!==reply)return;
-    audioPlayer.src='data:audio/wav;base64,'+r.audio_base64;
-    await audioPlayer.play();
-    if(!busy)setStatus('Playing reply · audio ready in '+((performance.now()-started)/1000).toFixed(1)+' s.');
-  }catch(e){if(lastReply===reply && !busy)setStatus('No compatible offline voice. Text chat still works.',true);}
+    u.onstart=()=>{clearTimeout(timer);if(current()&&!fallbackStarted)setStatus('Playing offline browser voice.');};
+    u.onend=()=>{clearTimeout(timer);if(current()&&!busy&&!fallbackStarted)setStatus('Ready.');};
+    u.onerror=()=>{clearTimeout(timer);void serverVoice();};
+    timer=setTimeout(()=>void serverVoice(),2500);
+    try{synth.speak(u);}catch(e){void serverVoice();}
+  } else await serverVoice();
 }
 async function startRecording(){
   liveStream = await navigator.mediaDevices.getUserMedia({audio:true});
@@ -215,12 +233,12 @@ async function transcribeAndSend(blob){
     const hint = asr.language_hint || asr.asr_language;
     setBusy(false);
     const reply = await sendText(['aeb','fr','en','de','tr'].includes(hint) ? hint : null, (performance.now()-started)/1000);
-    if(reply?.speech_text) void speakLast(reply);
+    if(reply) void speakLast(reply);
   } catch(e){ setStatus(e.message, true); } finally {setBusy(false);}
 }
 $('sendBtn').onclick = ()=>sendText();
 $('speakLast').onclick = ()=>speakLast();
-$('newChat').onclick = ()=>{ history=[]; lastReply=null; audioPlayer.pause(); window.speechSynthesis?.cancel(); chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
+$('newChat').onclick = ()=>{ history=[]; lastReply=null; playbackId++; audioPlayer.pause(); audioPlayer.hidden=true; window.speechSynthesis?.cancel(); chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
 $('messageBox').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendText(); } });
 $('micBtn').onclick = async ()=>{
   try{
