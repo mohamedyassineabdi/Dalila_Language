@@ -7,6 +7,12 @@ if (-not $env:ASR_BEAM_SIZE) { $env:ASR_BEAM_SIZE = '1' }
 $env:OLLAMA_NO_CLOUD = '1'
 $python = '.\.venv\Scripts\python.exe'
 if (-not (Test-Path $python)) { & powershell -ExecutionPolicy Bypass -File .\setup.ps1; if ($LASTEXITCODE -ne 0) { throw 'Setup failed' } }
+& $python -c "import importlib.util,sys; sys.exit(0 if importlib.util.find_spec('espeakng_loader') else 1)"
+if ($LASTEXITCODE -ne 0) {
+    Write-Host 'Installing multilingual offline speech voices (one-time download, about 10 MB)...'
+    & $python -m pip install -r requirements-tts.txt
+    if ($LASTEXITCODE -ne 0) { Write-Warning 'Offline voice package installation failed; other installed voices remain available.' }
+}
 $ollama = Get-Command ollama -ErrorAction SilentlyContinue
 if ($ollama) {
     try {
@@ -25,5 +31,5 @@ if ($ollama) {
 } else {
     Write-Warning 'Ollama executable not found. Limited fallback remains available.'
 }
-Write-Host 'Starting Dalila v0.5.0 at http://127.0.0.1:7860'
+Write-Host 'Starting Dalila v0.6.0 at http://127.0.0.1:7860'
 & $python -m uvicorn app:app --host 127.0.0.1 --port 7860

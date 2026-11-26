@@ -77,15 +77,22 @@ def chat_turn(text, language='auto', history=None, backend='baseline', style='au
                 response_style = choose_style(text, chosen, style)
                 if proposed['category'] == 'social' and (language == 'auto' or proposed['language'] == language):
                     answer = proposed['reply']
-                    speech_text = proposed['speech_text'] or (answer if response_style != 'arabizi' else None)
+                    speech_text = proposed['speech_text'].strip() or (answer if response_style != 'arabizi' else None)
                     if chosen in ('aeb','ar','arq','ayl'):
                         if response_style != 'arabizi' and script(answer) not in ('arabic','mixed'):
                             if speech_text and script(speech_text) in ('arabic','mixed'):
                                 answer = speech_text
                             else:
                                 raise ValueError('Model returned wrong script')
-                        if speech_text and script(speech_text) not in ('arabic','mixed'):
-                            speech_text = None
+                        if response_style != 'arabizi':
+                            speech_text = answer
+                        elif not speech_text or script(speech_text) not in ('arabic','mixed'):
+                            if script(answer) in ('arabic','mixed'):
+                                speech_text = answer
+                            else:
+                                raise ValueError('Missing Arabic-script speech rendering')
+                    else:
+                        speech_text = answer
                     used = 'ollama'
                 else:
                     domain = proposed['category'] == 'domain'
