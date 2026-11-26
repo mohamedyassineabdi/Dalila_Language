@@ -65,3 +65,7 @@ Docker: `docker build -t dalila-language-lab .` then `docker run --rm -p 127.0.0
 ## 8. Evidence and current decision
 
 Read `reports/IMPLEMENTATION_STATUS.md`, `reports/MODEL_AND_DATA_REVIEW.md`, `reports/advanced_text.json`, `reports/stress_text.json`, `reports/tests_advanced.txt`, `reports/legacy_retest.txt`, `reports/tts_advanced.json`, `reports/environment.json`. Phase 1 reports remain historical. The direct runtime network could not resolve Hugging Face, PyPI or Zenodo; no fresh neural inference was executed. **GO for research/demo setup; NO-GO for production or a claim of validated eight-language voice support.**
+
+
+## v0.4.0 — simple chat
+Stop the old server, run `git pull --ff-only`, then `powershell -ExecutionPolicy Bypass -File .\\run.ps1`. The launcher discovers an installed Ollama model or downloads Qwen3 4B once if Ollama is installed and a compatible model is absent. A several-GB download may occur. No cloud provider is automatically selected. The browser displays the actual model and fallback state. Voice messages are automatically sent and read when a compatible offline voice is available. Windows SAPI/eSpeak and local browser voices are generic, not native Tunisian TTS. No AFI factual responses are enabled. Real neural inference, Windows voices and microphone hardware require local validation.

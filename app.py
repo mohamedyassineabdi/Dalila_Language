@@ -12,7 +12,7 @@ from dalila.engines import route_asr, speak
 from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
 
-app = FastAPI(title="Dalila Language Lab", version="0.3.1")
+app = FastAPI(title="Dalila Language Lab", version="0.4.0")
 ROOT = Path(__file__).parent
 
 
@@ -54,6 +54,7 @@ def home():
 def health():
     return {
         'status': 'ok',
+        'version': app.version,
         'mode': 'research_only',
         'knowledge': 'not_connected',
         'languages': LANGS,
@@ -68,7 +69,8 @@ def capabilities():
     return {
         'default_language': 'auto',
         'semantic_backend': backend,
-        'voice_reply': bool(__import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
+        'voice_reply': bool(os.name=='nt' or __import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
+        'version': app.version,
         'ollama_model': installed_ollama_model() if backend == 'ollama' else None,
         'research_voice_enabled': os.getenv('DALILA_ENABLE_RESEARCH_TTS', '0') == '1',
         'cloud_enabled': _cloud_allowed(),
@@ -136,15 +138,10 @@ def voice_chat(file: UploadFile = File(...), language: str = Form('auto'), backe
                     f.write(chunk)
             asr = route_asr(path, language, None)
             semantic_backend = choose_semantic_backend(backend)
-            result = understand(asr['text'], language, [], semantic_backend, 'auto')
-            lang = result.get('language') or result.get('language_detection', {}).get('best_guess') or 'aeb'
-            return {
-                'transcript': asr['text'],
-                'asr': asr,
-                'assistant_text': result.get('response'),
-                'language': lang,
-                'technical': result,
-            }
+            hint = asr.get('language_hint') or asr.get('asr_language')
+            selected = hint if language=='auto' and hint in ('fr','en','de','tr','aeb') else language
+            result = chat_turn(asr['text'], selected, [], semantic_backend, 'auto')
+            return dict(result, transcript=asr['text'], asr=asr)
     except HTTPException:
         raise
     except Exception as e:
