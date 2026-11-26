@@ -25,3 +25,5 @@ outputs/
 *.safetensors
 *.gguf
 *.bin
+
+.venv-tunisian/
