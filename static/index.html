@@ -107,6 +107,10 @@ function addBubble(role, text, meta=''){
   const bubble = document.createElement('div');
   bubble.className = `bubble ${role}`;
   bubble.textContent = text;
+  bubble.dir = 'auto';
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.alignItems = role === 'user' ? 'flex-end' : 'flex-start';
   wrap.appendChild(bubble);
   if(meta){const m = document.createElement('div'); m.className='meta'; m.textContent=meta; wrap.appendChild(m);}
   chatLog.appendChild(wrap); chatLog.scrollTop = chatLog.scrollHeight;
@@ -121,7 +125,7 @@ async function api(path, body, form=false){
 async function loadCapabilities(){
   try{
     const c = await fetch('/capabilities').then(r=>r.json());
-    $('modeLine').textContent = `Automatic backend: ${c.semantic_backend}. Voice reply available. Research voice ${c.research_voice_enabled ? 'enabled' : 'disabled'}.`;
+    $('modeLine').textContent = `Automatic backend: ${c.semantic_backend}${c.ollama_model ? ' · '+c.ollama_model : ''}. ${c.voice_reply ? 'Server voice available.' : 'Trying local browser voices.'}`;
     $('backend').value = 'auto';
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
@@ -135,7 +139,7 @@ async function sendText(){
     const r = await api('/chat', {text, language:$('lang').value, backend:$('backend').value, history});
     history = [...history, text].slice(-6);
     lastReply = r;
-    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.intent?.label ? ' · intent: '+r.intent.label : ''}`;
+    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.model ? ' · '+r.model : ''}`;
     addBubble('assistant', r.assistant_text || 'No answer produced.', meta);
     $('debugPane').textContent = JSON.stringify(r.technical ?? r, null, 2);
     setStatus('Ready.');
@@ -149,7 +153,20 @@ async function speakLast(){
     audioPlayer.src = 'data:audio/wav;base64,' + r.audio_base64;
     await audioPlayer.play();
     setStatus('Playing reply.');
-  }catch(e){ setStatus(e.message, true); }
+  }catch(e){
+    const lang = {aeb:'ar', arq:'ar', ayl:'ar', ar:'ar', fr:'fr', en:'en', de:'de', tr:'tr'}[lastReply.language];
+    const synth = window.speechSynthesis;
+    const local = synth && synth.getVoices().find(v => v.localService && v.lang.toLowerCase().split('-')[0] === lang);
+    if (!local || lastReply.response_style === 'arabizi') {
+      setStatus('No compatible offline voice installed for this reply. Text chat still works.', true);
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(lastReply.assistant_text);
+    u.voice = local; u.lang = local.lang;
+    u.onend = () => setStatus('Ready.');
+    u.onerror = () => setStatus('Local browser voice failed.', true);
+    synth.speak(u); setStatus('Playing local browser voice (generic).');
+  }
 }
 async function startRecording(){
   liveStream = await navigator.mediaDevices.getUserMedia({audio:true});

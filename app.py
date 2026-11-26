@@ -9,8 +9,10 @@ from dalila.semantic import understand
 from dalila.voice import synthesize_reference
 from dalila.core import analyze, LANGS
 from dalila.engines import route_asr, speak
+from dalila.llm import installed_ollama_model
+from dalila.chat import chat_turn
 
-app = FastAPI(title="Dalila Language Lab", version="0.3.0")
+app = FastAPI(title="Dalila Language Lab", version="0.3.1")
 ROOT = Path(__file__).parent
 
 
@@ -21,19 +23,8 @@ def _cloud_allowed():
 def choose_semantic_backend(preferred: str = "auto") -> str:
     if preferred and preferred != "auto":
         return preferred
-    # Prefer local Ollama if reachable, then explicitly allowed cloud providers, else baseline.
-    try:
-        import requests
-        r = requests.get("http://127.0.0.1:11434/api/tags", timeout=(0.5, 1.5))
-        if r.ok:
-            return "ollama"
-    except Exception:
-        pass
-    if _cloud_allowed() and os.getenv("GEMINI_API_KEY") and os.getenv("GEMINI_MODEL"):
-        return "gemini"
-    if _cloud_allowed() and os.getenv("GROQ_API_KEY") and os.getenv("GROQ_MODEL"):
-        return "groq"
-    return "baseline"
+    # Automatic mode stays local; cloud providers require explicit selection.
+    return "ollama" if installed_ollama_model() else "baseline"
 
 
 class TextRequest(BaseModel):
@@ -77,7 +68,8 @@ def capabilities():
     return {
         'default_language': 'auto',
         'semantic_backend': backend,
-        'voice_reply': True,
+        'voice_reply': bool(__import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
+        'ollama_model': installed_ollama_model() if backend == 'ollama' else None,
         'research_voice_enabled': os.getenv('DALILA_ENABLE_RESEARCH_TTS', '0') == '1',
         'cloud_enabled': _cloud_allowed(),
     }
@@ -104,19 +96,7 @@ def semantic(request: SemanticRequest):
 def chat(request: SemanticRequest):
     try:
         backend = choose_semantic_backend(request.backend)
-        result = understand(request.text, request.language, request.history, backend, request.style)
-        lang = result.get('language') or result.get('language_detection', {}).get('best_guess') or 'aeb'
-        reply = result.get('response') or 'I understood your message, but I still need verified AFI data before I can give a confirmed answer.'
-        return {
-            'user_text': request.text,
-            'assistant_text': reply,
-            'language': lang,
-            'detected_language': result.get('language'),
-            'needs_language_confirmation': result.get('needs_language_confirmation', False),
-            'intent': result.get('intent', {}),
-            'semantic_backend': result.get('semantic_backend', backend),
-            'technical': result,
-        }
+        return chat_turn(request.text, request.language, request.history, backend, request.style)
     except ValueError as e:
         raise HTTPException(400, str(e))
 
