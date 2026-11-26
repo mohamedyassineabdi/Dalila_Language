@@ -13,7 +13,7 @@ from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
 from dalila import neural_voice, tunisian_voice
 
-app = FastAPI(title="Dalila Language Lab", version="0.8.0")
+app = FastAPI(title="Dalila Language Lab", version="0.8.1")
 ROOT = Path(__file__).parent
 WARM_STATUS='not_started'
 
@@ -92,6 +92,7 @@ def capabilities():
         'packaged_tts': packaged_voice_available(),
         'neural_tts': neural_voice.readiness(),
         'tunisian_tts': tunisian_voice.readiness(),
+        'tunisian_voice_details': tunisian_voice.diagnostics(),
         'general_asr': general_asr_key(),
         'asr_warmup': WARM_STATUS,
         'tts_language_map': VOICE_MAP,
@@ -122,8 +123,7 @@ def semantic(request: SemanticRequest):
 @app.post('/chat')
 def chat(request: SemanticRequest):
     try:
-        backend = choose_semantic_backend(request.backend)
-        return chat_turn(request.text, request.language, request.history, backend, request.style)
+        return chat_turn(request.text, request.language, request.history, request.backend, request.style)
     except ValueError as e:
         raise HTTPException(400, str(e))
 

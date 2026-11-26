@@ -27,25 +27,34 @@ def load():
         raise RuntimeError("Tunisian language ID missing")
     return model
 
+def generation_steps():
+    try: return max(4,min(16,int(os.getenv("DALILA_TUNISIAN_STEPS","4"))))
+    except ValueError: return 4
+
 def generate(model,text,output):
     import soundfile as sf
     import numpy as np
     started=time.perf_counter()
-    audio=model.generate(text=text,language="aeb",num_step=16)
+    steps=generation_steps()
+    audio=model.generate(text=text,language="aeb",num_step=steps)
     samples=np.asarray(audio[0],dtype=np.float32).reshape(-1)
     rate=int(model.sampling_rate)
     if not samples.size or not np.isfinite(samples).all() or np.max(np.abs(samples))<1e-5:
         raise RuntimeError("Invalid synthesized audio")
     sf.write(str(output),samples,rate,subtype="PCM_16")
-    return {"seconds":round(time.perf_counter()-started,3),"audio_seconds":round(samples.size/rate,3)}
+    return {"seconds":round(time.perf_counter()-started,3),"audio_seconds":round(samples.size/rate,3),"steps":steps}
 
 def main():
     if os.getenv("DALILA_TUNISIAN_RESEARCH","0")!="1":
         raise SystemExit("Research mode must be explicitly enabled")
     # Libraries may print progress; reserve stdout for machine-readable messages.
     with contextlib.redirect_stdout(sys.stderr):
-        model=load()
-    emit({"ready":True})
+        try:
+            model=load()
+        except Exception as exc:
+            emit({"ready":False,"error":type(exc).__name__})
+            raise
+    emit({"ready":True,"steps":generation_steps()})
     for line in sys.stdin:
         try:
             req=json.loads(line)

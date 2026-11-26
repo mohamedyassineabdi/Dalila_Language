@@ -41,3 +41,30 @@ def test_fallback_if_tunisian_unavailable(monkeypatch,tmp_path):
     monkeypatch.setattr(tunisian_voice,'speak_tunisian',fail)
     monkeypatch.setattr(neural_voice,'speak_neural',fake)
     assert engines.speak('عسلامة','aeb',tmp_path/'a.wav')['engine']=='piper'
+
+
+def test_repeated_voice_cached(monkeypatch,tmp_path):
+    monkeypatch.setenv('DALILA_TUNISIAN_RESEARCH','1')
+    monkeypatch.setattr(tunisian_voice,'CACHE',__import__('collections').OrderedDict())
+    monkeypatch.setattr(tunisian_voice,'STEPS',4)
+    key=tunisian_voice._cache_key('عسلامة')
+    original=tmp_path/'original.wav'
+    write_wave(original)
+    tunisian_voice._remember(key,original,{'engine':'omnivoice','voice':'aeb-synthetic'})
+    monkeypatch.setattr(tunisian_voice,'STATE','timed_out')
+    out=tmp_path/'cached.wav'
+    assert tunisian_voice.speak_tunisian('عسلامة',out)['cache_hit']
+    assert out.read_bytes()==original.read_bytes()
+
+def test_timeout_config(monkeypatch):
+    monkeypatch.setenv('DALILA_TUNISIAN_TIMEOUT','45')
+    assert tunisian_voice.timeout_seconds()==45
+    monkeypatch.setenv('DALILA_TUNISIAN_TIMEOUT','9999')
+    assert tunisian_voice.timeout_seconds()==120
+
+def test_generation_steps(monkeypatch):
+    from dalila.tunisian_worker import generation_steps
+    monkeypatch.delenv('DALILA_TUNISIAN_STEPS',raising=False)
+    assert generation_steps()==4
+    monkeypatch.setenv('DALILA_TUNISIAN_STEPS','16')
+    assert generation_steps()==16

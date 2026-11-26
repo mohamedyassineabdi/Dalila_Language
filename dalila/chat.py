@@ -69,6 +69,13 @@ def chat_turn(text, language='auto', history=None, backend='baseline', style='au
             answer = speech_text = 'إي، نجم نعاونك. شنوة نوع المشروع اللي تحب تعملو؟'
         used = 'guided'
     else:
+        if backend == 'auto':
+            # With no verified AFI data, administrative replies are controlled anyway.
+            if domain:
+                backend = 'baseline'
+            else:
+                from .llm import installed_ollama_model
+                backend = 'ollama' if installed_ollama_model() else 'baseline'
         if backend == 'ollama' and not domain:
             try:
                 proposed, model = conversational_reply(text, history or [], chosen, response_style)
