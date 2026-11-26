@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dalila Chat</title>
+  <style>
+    :root{--bg:#f4f7fb;--card:#ffffff;--text:#173042;--muted:#5e7482;--line:#d8e2ea;--brand:#0a6a74;--brand-2:#0d7f8d;--user:#dff4f7;--assistant:#eef3f7;--danger:#a53131}
+    *{box-sizing:border-box} body{margin:0;font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+    .wrap{max-width:900px;margin:0 auto;padding:24px 16px 32px}
+    .hero{margin-bottom:16px}.hero h1{margin:0 0 4px;font-size:2rem}.hero p{margin:0;color:var(--muted)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 4px 24px rgba(13,52,77,.05)}
+    .chat-shell{display:flex;flex-direction:column;min-height:78vh}
+    .chat-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+    .chat-head small{color:var(--muted);display:block}.status{font-size:.9rem;color:var(--muted)}
+    .chat-log{padding:18px;display:flex;flex-direction:column;gap:12px;min-height:420px;max-height:58vh;overflow:auto;background:linear-gradient(180deg,#fbfdff,#f8fbfd)}
+    .bubble{max-width:82%;padding:12px 14px;border-radius:16px;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.assistant{background:var(--assistant);align-self:flex-start;border-bottom-left-radius:6px}.bubble.user{background:var(--user);align-self:flex-end;border-bottom-right-radius:6px}
+    .meta{font-size:.82rem;color:var(--muted);margin:2px 2px 0}
+    .composer{padding:16px;border-top:1px solid var(--line)}
+    .input-row{display:flex;gap:10px;align-items:flex-end}.textbox{flex:1}.textbox textarea{width:100%;resize:vertical;min-height:62px;max-height:180px;padding:14px;border:1px solid var(--line);border-radius:14px;font:inherit;background:white}
+    .actions{display:flex;gap:8px;align-items:center}.icon-btn,.send-btn,.ghost-btn{border:none;border-radius:14px;cursor:pointer;font:inherit}
+    .icon-btn{width:52px;height:52px;display:grid;place-items:center;background:#edf5f7;color:var(--brand);font-size:1.25rem;border:1px solid var(--line)}
+    .icon-btn.recording{background:#ffe8e8;color:var(--danger);border-color:#f0b9b9}
+    .send-btn{height:52px;padding:0 18px;background:var(--brand);color:#fff;font-weight:600}.send-btn:hover{background:var(--brand-2)}
+    .ghost-btn{padding:10px 12px;background:#eef3f7;color:var(--text);border:1px solid var(--line)}
+    details{border-top:1px solid var(--line)} details>summary{list-style:none;cursor:pointer;padding:14px 18px;color:var(--muted);font-weight:600} details>summary::-webkit-details-marker{display:none}
+    .advanced{padding:0 18px 18px;display:grid;gap:12px}.row{display:grid;gap:6px}.row label{font-size:.92rem;color:var(--muted)}
+    select,input[type=file],textarea.advanced-text{font:inherit;padding:10px;border-radius:12px;border:1px solid var(--line);background:#fff;width:100%}
+    .inline{display:flex;flex-wrap:wrap;gap:12px}.inline > div{flex:1 1 220px}
+    .hidden{display:none}.hint{color:var(--muted);font-size:.9rem}.error{color:var(--danger)} pre{background:#0f1e29;color:#d9edf7;padding:14px;border-radius:14px;overflow:auto;font-size:.85rem}
+    @media (max-width:680px){.bubble{max-width:92%}.chat-head{flex-direction:column;align-items:flex-start}.actions{width:100%}.icon-btn,.send-btn{flex:0 0 auto}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Dalila · Chatbot</h1>
+      <p>Speak or type naturally. The app now chooses language understanding and speech tools automatically in the background.</p>
+    </div>
+    <div class="card chat-shell">
+      <div class="chat-head">
+        <div>
+          <strong>Simple mode</strong>
+          <small id="modeLine">Loading capabilities…</small>
+        </div>
+        <div class="actions">
+          <button id="newChat" class="ghost-btn">New chat</button>
+          <button id="speakLast" class="ghost-btn">🔊 Read reply</button>
+        </div>
+      </div>
+      <div id="chatLog" class="chat-log"></div>
+      <div class="composer">
+        <div class="input-row">
+          <div class="textbox">
+            <textarea id="messageBox" dir="auto" placeholder="Type here in Tunisian, Arabic, French, English… or press the mic button."></textarea>
+          </div>
+          <button id="micBtn" class="icon-btn" title="Record voice">🎤</button>
+          <button id="sendBtn" class="send-btn">Send</button>
+        </div>
+        <div style="display:flex;justify-content:space-between;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap">
+          <div id="statusLine" class="hint">Ready.</div>
+          <div class="hint">No verified AFI knowledge is connected yet; answers stay conservative by design.</div>
+        </div>
+      </div>
+      <details>
+        <summary>Advanced / research tools</summary>
+        <div class="advanced">
+          <div class="inline">
+            <div class="row">
+              <label>Preferred language</label>
+              <select id="lang"><option value="auto">Auto</option><option value="aeb">Tunisian Arabic</option><option value="ar">MSA</option><option value="fr">French</option><option value="en">English</option><option value="arq">Algerian Arabic</option><option value="ayl">Libyan Arabic</option><option value="de">German</option><option value="tr">Turkish</option></select>
+            </div>
+            <div class="row">
+              <label>Semantic backend</label>
+              <select id="backend"><option value="auto">Automatic</option><option value="baseline">Baseline</option><option value="ollama">Ollama</option><option value="gemini">Gemini</option><option value="groq">Groq</option></select>
+            </div>
+            <div class="row">
+              <label>ASR model</label>
+              <select id="asrModel"><option value="auto">Automatic</option><option value="tn-small">tn-small</option><option value="tn-whisperx">tn-whisperx</option><option value="small">small</option><option value="turbo">turbo</option><option value="large-v3">large-v3</option><option value="tn-codeswitch">tn-codeswitch</option></select>
+            </div>
+          </div>
+          <div class="row">
+            <label>Upload audio instead of recording</label>
+            <input type="file" id="audioFile" accept="audio/*">
+          </div>
+          <div class="row">
+            <label>Technical details</label>
+            <pre id="debugPane">No request yet.</pre>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+<script>
+const $ = id => document.getElementById(id);
+const chatLog = $('chatLog');
+const audioPlayer = new Audio();
+let history = [];
+let lastReply = null;
+let mediaRecorder = null;
+let liveStream = null;
+let pendingChunks = [];
+let recordedBlob = null;
+
+function addBubble(role, text, meta=''){
+  const wrap = document.createElement('div');
+  const bubble = document.createElement('div');
+  bubble.className = `bubble ${role}`;
+  bubble.textContent = text;
+  wrap.appendChild(bubble);
+  if(meta){const m = document.createElement('div'); m.className='meta'; m.textContent=meta; wrap.appendChild(m);}
+  chatLog.appendChild(wrap); chatLog.scrollTop = chatLog.scrollHeight;
+}
+function setStatus(msg, isError=false){ const el=$('statusLine'); el.textContent=msg; el.className=isError?'hint error':'hint'; }
+async function api(path, body, form=false){
+  const res = await fetch(path, {method:'POST', headers: form? {} : {'Content-Type':'application/json'}, body: form? body : JSON.stringify(body)});
+  const json = await res.json().catch(()=>({detail:'Unknown error'}));
+  if(!res.ok){ throw new Error(typeof json.detail==='string' ? json.detail : JSON.stringify(json.detail)); }
+  return json;
+}
+async function loadCapabilities(){
+  try{
+    const c = await fetch('/capabilities').then(r=>r.json());
+    $('modeLine').textContent = `Automatic backend: ${c.semantic_backend}. Voice reply available. Research voice ${c.research_voice_enabled ? 'enabled' : 'disabled'}.`;
+    $('backend').value = 'auto';
+  }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
+}
+async function sendText(){
+  const text = $('messageBox').value.trim();
+  if(!text) return;
+  addBubble('user', text);
+  $('messageBox').value='';
+  setStatus('Thinking…');
+  try{
+    const r = await api('/chat', {text, language:$('lang').value, backend:$('backend').value, history});
+    history = [...history, text].slice(-6);
+    lastReply = r;
+    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.intent?.label ? ' · intent: '+r.intent.label : ''}`;
+    addBubble('assistant', r.assistant_text || 'No answer produced.', meta);
+    $('debugPane').textContent = JSON.stringify(r.technical ?? r, null, 2);
+    setStatus('Ready.');
+  } catch(e){ setStatus(e.message, true); addBubble('assistant', 'Sorry — I hit an error while processing your message.'); }
+}
+async function speakLast(){
+  if(!lastReply?.assistant_text){ setStatus('No assistant reply yet.', true); return; }
+  setStatus('Generating audio reply…');
+  try{
+    const r = await api('/speak', {text:lastReply.assistant_text, language:lastReply.language || 'aeb'});
+    audioPlayer.src = 'data:audio/wav;base64,' + r.audio_base64;
+    await audioPlayer.play();
+    setStatus('Playing reply.');
+  }catch(e){ setStatus(e.message, true); }
+}
+async function startRecording(){
+  liveStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  pendingChunks = [];
+  mediaRecorder = new MediaRecorder(liveStream);
+  mediaRecorder.ondataavailable = e => { if(e.data.size) pendingChunks.push(e.data); };
+  mediaRecorder.onstop = async () => {
+    recordedBlob = new Blob(pendingChunks, {type: mediaRecorder.mimeType || 'audio/webm'});
+    liveStream.getTracks().forEach(t=>t.stop());
+    $('micBtn').classList.remove('recording');
+    $('micBtn').textContent = '🎤';
+    await transcribeAndSend(recordedBlob);
+  };
+  mediaRecorder.start();
+  $('micBtn').classList.add('recording');
+  $('micBtn').textContent = '⏹';
+  setStatus('Recording… press again to stop.');
+}
+async function transcribeAndSend(blob){
+  setStatus('Transcribing voice…');
+  try{
+    const fd = new FormData();
+    fd.append('file', blob, 'speech.webm');
+    fd.append('language', $('lang').value);
+    fd.append('model', $('asrModel').value);
+    const asr = await api('/transcribe', fd, true);
+    $('debugPane').textContent = JSON.stringify(asr, null, 2);
+    $('messageBox').value = asr.text || '';
+    setStatus('Voice transcribed. Sending message…');
+    await sendText();
+  } catch(e){ setStatus(e.message, true); }
+}
+$('sendBtn').onclick = sendText;
+$('speakLast').onclick = speakLast;
+$('newChat').onclick = ()=>{ history=[]; lastReply=null; chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
+$('messageBox').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendText(); } });
+$('micBtn').onclick = async ()=>{
+  try{
+    const file = $('audioFile').files[0];
+    if(file){ return transcribeAndSend(file); }
+    if(mediaRecorder && mediaRecorder.state === 'recording'){ mediaRecorder.stop(); return; }
+    await startRecording();
+  }catch(e){ setStatus(e.message, true); }
+};
+loadCapabilities();
+addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.');
+</script>
+</body>
+</html>

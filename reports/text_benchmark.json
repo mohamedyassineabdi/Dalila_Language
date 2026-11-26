@@ -1,0 +1,973 @@
+{
+  "provenance": "synthetic unreviewed draft; not generalization evidence",
+  "eval_count": 72,
+  "dev_count": 72,
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "rss_mb": 178.511872,
+  "results": {
+    "language_word": {
+      "accuracy": 0.7083333333333334,
+      "macro_f1": 0.7191109422492401,
+      "tn_accuracy": 0.875,
+      "labels": [
+        "aeb",
+        "ar",
+        "arq",
+        "ayl",
+        "de",
+        "en",
+        "fr",
+        "tr"
+      ],
+      "confusion": [
+        [
+          14,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          4,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2
+        ]
+      ],
+      "train_s": 0.05113548299999593,
+      "median_ms": 0.29006350000315706,
+      "errors": [
+        {
+          "id": "t019",
+          "expected": "aeb",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t021",
+          "expected": "aeb",
+          "predicted": "ar"
+        },
+        {
+          "id": "t042",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t044",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t045",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t046",
+          "expected": "ar",
+          "predicted": "arq"
+        },
+        {
+          "id": "t048",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t058",
+          "expected": "fr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t064",
+          "expected": "fr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t077",
+          "expected": "en",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t078",
+          "expected": "en",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t090",
+          "expected": "arq",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t096",
+          "expected": "arq",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t106",
+          "expected": "ayl",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t110",
+          "expected": "ayl",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t137",
+          "expected": "tr",
+          "predicted": "fr"
+        },
+        {
+          "id": "t140",
+          "expected": "tr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t141",
+          "expected": "tr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t142",
+          "expected": "tr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t143",
+          "expected": "tr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t144",
+          "expected": "tr",
+          "predicted": "aeb"
+        }
+      ]
+    },
+    "language_char": {
+      "accuracy": 0.6805555555555556,
+      "macro_f1": 0.6970290052526895,
+      "tn_accuracy": 0.625,
+      "labels": [
+        "aeb",
+        "ar",
+        "arq",
+        "ayl",
+        "de",
+        "en",
+        "fr",
+        "tr"
+      ],
+      "confusion": [
+        [
+          10,
+          1,
+          1,
+          3,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          2,
+          2,
+          3,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          4,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          6,
+          1,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          6,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          8
+        ]
+      ],
+      "train_s": 0.290913302000007,
+      "median_ms": 0.3811929999955055,
+      "errors": [
+        {
+          "id": "t017",
+          "expected": "aeb",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t019",
+          "expected": "aeb",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t022",
+          "expected": "aeb",
+          "predicted": "ar"
+        },
+        {
+          "id": "t029",
+          "expected": "aeb",
+          "predicted": "arq"
+        },
+        {
+          "id": "t030",
+          "expected": "aeb",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t031",
+          "expected": "aeb",
+          "predicted": "fr"
+        },
+        {
+          "id": "t041",
+          "expected": "ar",
+          "predicted": "arq"
+        },
+        {
+          "id": "t042",
+          "expected": "ar",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t044",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t045",
+          "expected": "ar",
+          "predicted": "arq"
+        },
+        {
+          "id": "t046",
+          "expected": "ar",
+          "predicted": "arq"
+        },
+        {
+          "id": "t048",
+          "expected": "ar",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t061",
+          "expected": "fr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t063",
+          "expected": "fr",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t077",
+          "expected": "en",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t078",
+          "expected": "en",
+          "predicted": "fr"
+        },
+        {
+          "id": "t089",
+          "expected": "arq",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t091",
+          "expected": "arq",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t093",
+          "expected": "arq",
+          "predicted": "ayl"
+        },
+        {
+          "id": "t096",
+          "expected": "arq",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t110",
+          "expected": "ayl",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t112",
+          "expected": "ayl",
+          "predicted": "aeb"
+        },
+        {
+          "id": "t125",
+          "expected": "de",
+          "predicted": "aeb"
+        }
+      ]
+    },
+    "intent_word": {
+      "accuracy": 0.4861111111111111,
+      "macro_f1": 0.4414000827603769,
+      "tn_accuracy": 0.625,
+      "labels": [
+        "availability",
+        "clarify",
+        "deadline",
+        "documents",
+        "incentives",
+        "price",
+        "procedure",
+        "surface"
+      ],
+      "confusion": [
+        [
+          7,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          1,
+          4,
+          0,
+          3,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          6,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          7,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          0,
+          2,
+          4,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          0,
+          2,
+          0,
+          3,
+          1,
+          2
+        ],
+        [
+          0,
+          1,
+          0,
+          2,
+          0,
+          0,
+          5,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          8
+        ]
+      ],
+      "train_s": 0.04085742099999834,
+      "median_ms": 0.26130599999873994,
+      "errors": [
+        {
+          "id": "t020",
+          "expected": "procedure",
+          "predicted": "surface"
+        },
+        {
+          "id": "t022",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t028",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t029",
+          "expected": "incentives",
+          "predicted": "documents"
+        },
+        {
+          "id": "t030",
+          "expected": "clarify",
+          "predicted": "documents"
+        },
+        {
+          "id": "t032",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t042",
+          "expected": "price",
+          "predicted": "documents"
+        },
+        {
+          "id": "t044",
+          "expected": "procedure",
+          "predicted": "documents"
+        },
+        {
+          "id": "t045",
+          "expected": "surface",
+          "predicted": "documents"
+        },
+        {
+          "id": "t047",
+          "expected": "incentives",
+          "predicted": "availability"
+        },
+        {
+          "id": "t048",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t058",
+          "expected": "price",
+          "predicted": "documents"
+        },
+        {
+          "id": "t059",
+          "expected": "documents",
+          "predicted": "incentives"
+        },
+        {
+          "id": "t062",
+          "expected": "deadline",
+          "predicted": "price"
+        },
+        {
+          "id": "t063",
+          "expected": "incentives",
+          "predicted": "availability"
+        },
+        {
+          "id": "t064",
+          "expected": "clarify",
+          "predicted": "documents"
+        },
+        {
+          "id": "t074",
+          "expected": "price",
+          "predicted": "procedure"
+        },
+        {
+          "id": "t075",
+          "expected": "documents",
+          "predicted": "incentives"
+        },
+        {
+          "id": "t078",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t079",
+          "expected": "incentives",
+          "predicted": "availability"
+        },
+        {
+          "id": "t080",
+          "expected": "clarify",
+          "predicted": "deadline"
+        },
+        {
+          "id": "t090",
+          "expected": "price",
+          "predicted": "availability"
+        },
+        {
+          "id": "t094",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t096",
+          "expected": "clarify",
+          "predicted": "documents"
+        },
+        {
+          "id": "t108",
+          "expected": "procedure",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t110",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t112",
+          "expected": "clarify",
+          "predicted": "procedure"
+        },
+        {
+          "id": "t121",
+          "expected": "availability",
+          "predicted": "incentives"
+        },
+        {
+          "id": "t122",
+          "expected": "price",
+          "predicted": "surface"
+        },
+        {
+          "id": "t126",
+          "expected": "deadline",
+          "predicted": "procedure"
+        },
+        {
+          "id": "t128",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t137",
+          "expected": "availability",
+          "predicted": "surface"
+        },
+        {
+          "id": "t138",
+          "expected": "price",
+          "predicted": "surface"
+        },
+        {
+          "id": "t140",
+          "expected": "procedure",
+          "predicted": "documents"
+        },
+        {
+          "id": "t142",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t143",
+          "expected": "incentives",
+          "predicted": "documents"
+        },
+        {
+          "id": "t144",
+          "expected": "clarify",
+          "predicted": "documents"
+        }
+      ]
+    },
+    "intent_char": {
+      "accuracy": 0.5694444444444444,
+      "macro_f1": 0.5462970801128696,
+      "tn_accuracy": 0.5625,
+      "labels": [
+        "availability",
+        "clarify",
+        "deadline",
+        "documents",
+        "incentives",
+        "price",
+        "procedure",
+        "surface"
+      ],
+      "confusion": [
+        [
+          8,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          1,
+          2,
+          0,
+          5,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          3,
+          3,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          8,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          1,
+          0,
+          1,
+          4,
+          1,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          1,
+          0,
+          4,
+          0,
+          2
+        ],
+        [
+          1,
+          1,
+          2,
+          1,
+          0,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          9
+        ]
+      ],
+      "train_s": 0.9215741659999992,
+      "median_ms": 0.34024800000054256,
+      "errors": [
+        {
+          "id": "t017",
+          "expected": "availability",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t020",
+          "expected": "procedure",
+          "predicted": "documents"
+        },
+        {
+          "id": "t022",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t026",
+          "expected": "procedure",
+          "predicted": "deadline"
+        },
+        {
+          "id": "t028",
+          "expected": "deadline",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t029",
+          "expected": "incentives",
+          "predicted": "availability"
+        },
+        {
+          "id": "t032",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t044",
+          "expected": "procedure",
+          "predicted": "availability"
+        },
+        {
+          "id": "t047",
+          "expected": "incentives",
+          "predicted": "availability"
+        },
+        {
+          "id": "t048",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t058",
+          "expected": "price",
+          "predicted": "documents"
+        },
+        {
+          "id": "t060",
+          "expected": "procedure",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t064",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t074",
+          "expected": "price",
+          "predicted": "availability"
+        },
+        {
+          "id": "t075",
+          "expected": "documents",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t078",
+          "expected": "deadline",
+          "predicted": "procedure"
+        },
+        {
+          "id": "t079",
+          "expected": "incentives",
+          "predicted": "price"
+        },
+        {
+          "id": "t080",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t094",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t095",
+          "expected": "incentives",
+          "predicted": "documents"
+        },
+        {
+          "id": "t096",
+          "expected": "clarify",
+          "predicted": "documents"
+        },
+        {
+          "id": "t106",
+          "expected": "price",
+          "predicted": "availability"
+        },
+        {
+          "id": "t110",
+          "expected": "deadline",
+          "predicted": "documents"
+        },
+        {
+          "id": "t112",
+          "expected": "clarify",
+          "predicted": "price"
+        },
+        {
+          "id": "t122",
+          "expected": "price",
+          "predicted": "surface"
+        },
+        {
+          "id": "t128",
+          "expected": "clarify",
+          "predicted": "deadline"
+        },
+        {
+          "id": "t138",
+          "expected": "price",
+          "predicted": "surface"
+        },
+        {
+          "id": "t140",
+          "expected": "procedure",
+          "predicted": "deadline"
+        },
+        {
+          "id": "t142",
+          "expected": "deadline",
+          "predicted": "procedure"
+        },
+        {
+          "id": "t143",
+          "expected": "incentives",
+          "predicted": "clarify"
+        },
+        {
+          "id": "t144",
+          "expected": "clarify",
+          "predicted": "documents"
+        }
+      ]
+    }
+  }
+}

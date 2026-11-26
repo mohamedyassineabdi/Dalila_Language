@@ -1,0 +1,2 @@
+datasets>=3.2,<5
+soundfile>=0.12,<1

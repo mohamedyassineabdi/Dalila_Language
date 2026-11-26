@@ -1,0 +1,22 @@
+test_chat_survives_voice_error (test_app.PrototypeTests.test_chat_survives_voice_error) ... ok
+test_cloud (test_app.PrototypeTests.test_cloud) ... ok
+test_consent (test_app.PrototypeTests.test_consent) ... ok
+test_ollama (test_app.PrototypeTests.test_ollama) ... ok
+test_prompt_context (test_app.PrototypeTests.test_prompt_context) ... ok
+test_rate_limit (test_app.PrototypeTests.test_rate_limit) ... ok
+test_reset (test_app.PrototypeTests.test_reset) ... ok
+test_transcription_callback (test_app.PrototypeTests.test_transcription_callback) ... ok
+test_ui_build (test_app.PrototypeTests.test_ui_build) ... /usr/lib/python3.13/asyncio/base_events.py:764: ResourceWarning: unclosed event loop <_UnixSelectorEventLoop running=False closed=False debug=False>
+  _warn(f"unclosed event loop {self!r}", ResourceWarning, source=self)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/usr/lib/python3.13/asyncio/base_events.py:764: ResourceWarning: unclosed event loop <_UnixSelectorEventLoop running=False closed=False debug=False>
+  _warn(f"unclosed event loop {self!r}", ResourceWarning, source=self)
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.171s
+
+OK
+
+Scope: Python compilation and Gradio 6.5.1 UI construction succeeded in the build environment (Python 3.13). Network model requests and audio inference were mocked in tests. No actual model weights, API credentials, Windows setup, CUDA, or TTS dependency installation were exercised. Gradio emitted non-fatal unclosed event-loop ResourceWarnings during UI construction tests. No claim of measured dialect or voice quality is made.

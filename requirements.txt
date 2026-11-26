@@ -1,0 +1,12 @@
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-multipart>=0.0.18,<1
+scikit-learn>=1.5,<2
+psutil>=6,<8
+faster-whisper>=1.1,<2
+httpx>=0.27,<1
+pytest>=8,<10
+
+requests>=2.32,<3
+python-dotenv>=1,<2
+huggingface-hub>=0.34,<2

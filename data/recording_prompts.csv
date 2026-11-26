@@ -1,0 +1,73 @@
+﻿id,language,intent,text,provenance,review_status
+t017,aeb,availability,بالله فما بلاصة شاغرة في زغوان؟,synthetic_draft,unreviewed
+t018,aeb,price,بقداش المتر في سوسة موش في صفاقس؟,synthetic_draft,unreviewed
+t019,aeb,documents,شنية الوثايق اللي نجيبهم معايا للـ dossier؟,synthetic_draft,unreviewed
+t020,aeb,procedure,نحب نعمل usine، منين نبدأ؟,synthetic_draft,unreviewed
+t021,aeb,surface,ما نحبش 2000 متر مربع، نحب 750 m²,synthetic_draft,unreviewed
+t022,aeb,deadline,ينجم الواحد يودع المطلب قبل 15 ديسمبر؟,synthetic_draft,unreviewed
+t023,aeb,availability,"3aslema, famma lot disponible fi Mghira?",synthetic_draft,unreviewed
+t024,aeb,price,b9addech el prix unitaire fi Sfax?,synthetic_draft,unreviewed
+t025,aeb,documents,chneya les pièces justificatives elli na7tajhom?,synthetic_draft,unreviewed
+t026,aeb,procedure,najem na3mel réservation en ligne walla le?,synthetic_draft,unreviewed
+t027,aeb,surface,n7eb 800 m2 moch 1800,synthetic_draft,unreviewed
+t028,aeb,deadline,emta nsakker dossier?,synthetic_draft,unreviewed
+t029,aeb,incentives,فمّا تشجيعات جبائية للصناعيين؟,synthetic_draft,unreviewed
+t030,aeb,clarify,و بالنسبة للأخرى؟,synthetic_draft,unreviewed
+t031,aeb,incentives,chneya el aides lel projet jdid?,synthetic_draft,unreviewed
+t032,aeb,clarify,w heki 9addech?,synthetic_draft,unreviewed
+t041,ar,availability,هل تتوفر أراض صناعية في بنزرت؟,synthetic_draft,unreviewed
+t042,ar,price,كم تبلغ تكلفة القطعة؟,synthetic_draft,unreviewed
+t043,ar,documents,ما المستندات اللازمة لإكمال الملف؟,synthetic_draft,unreviewed
+t044,ar,procedure,أريد معرفة إجراءات إنشاء مصنع,synthetic_draft,unreviewed
+t045,ar,surface,أحتاج إلى 750 مترا مربعا وليس 2000,synthetic_draft,unreviewed
+t046,ar,deadline,هل يمكن التسجيل قبل 15 ديسمبر؟,synthetic_draft,unreviewed
+t047,ar,incentives,هل توجد إعفاءات ضريبية؟,synthetic_draft,unreviewed
+t048,ar,clarify,وماذا عن المنطقة الأخرى؟,synthetic_draft,unreviewed
+t057,fr,availability,Reste-t-il des terrains libres à Bizerte ?,synthetic_draft,unreviewed
+t058,fr,price,Combien coûte un lot à Sfax ?,synthetic_draft,unreviewed
+t059,fr,documents,Quelles pièces joindre au dossier ?,synthetic_draft,unreviewed
+t060,fr,procedure,Par où commencer pour ouvrir une usine ?,synthetic_draft,unreviewed
+t061,fr,surface,"Je veux 750 m², pas 2000.",synthetic_draft,unreviewed
+t062,fr,deadline,Puis-je déposer le dossier avant le 15 décembre ?,synthetic_draft,unreviewed
+t063,fr,incentives,Existe-t-il des avantages fiscaux ?,synthetic_draft,unreviewed
+t064,fr,clarify,Et pour l’autre zone ?,synthetic_draft,unreviewed
+t073,en,availability,Is there any vacant land in Bizerte?,synthetic_draft,unreviewed
+t074,en,price,How much does a plot in Sfax cost?,synthetic_draft,unreviewed
+t075,en,documents,What paperwork should I bring?,synthetic_draft,unreviewed
+t076,en,procedure,Where do I start if I want to build a factory?,synthetic_draft,unreviewed
+t077,en,surface,"I want 750 m², not 2000.",synthetic_draft,unreviewed
+t078,en,deadline,Can I submit before December 15?,synthetic_draft,unreviewed
+t079,en,incentives,Are there any tax breaks?,synthetic_draft,unreviewed
+t080,en,clarify,What about the other area?,synthetic_draft,unreviewed
+t089,arq,availability,واش مازال كاين terrain في بنزرت؟,synthetic_draft,unreviewed
+t090,arq,price,بشحال هذي الأرض في صفاقس؟,synthetic_draft,unreviewed
+t091,arq,documents,واش لازملي في الدوسي؟,synthetic_draft,unreviewed
+t092,arq,procedure,حاب نفتح مصنع كيفاش نبدا؟,synthetic_draft,unreviewed
+t093,arq,surface,راني باغي 750 متر ماشي 2000,synthetic_draft,unreviewed
+t094,arq,deadline,نقدر ندفع قبل 15 ديسمبر؟,synthetic_draft,unreviewed
+t095,arq,incentives,كاين إعفاءات من الضريبة ولا والو؟,synthetic_draft,unreviewed
+t096,arq,clarify,و هذيك الأخرى؟,synthetic_draft,unreviewed
+t105,ayl,availability,فيه قطعة متوفرة في بنزرت توا؟,synthetic_draft,unreviewed
+t106,ayl,price,بكم تجيني الأرض في صفاقس؟,synthetic_draft,unreviewed
+t107,ayl,documents,شن المستندات اللي نجيبها معاي؟,synthetic_draft,unreviewed
+t108,ayl,procedure,نبي نفتح مصنع شن ندير أول حاجة؟,synthetic_draft,unreviewed
+t109,ayl,surface,نبي 750 متر مش 2000,synthetic_draft,unreviewed
+t110,ayl,deadline,نقدر نقدم قبل 15 ديسمبر؟,synthetic_draft,unreviewed
+t111,ayl,incentives,فيه تخفيضات ضريبية للمشروع؟,synthetic_draft,unreviewed
+t112,ayl,clarify,والمنطقة الثانية كيف؟,synthetic_draft,unreviewed
+t121,de,availability,Gibt es noch freie Flächen in Bizerte?,synthetic_draft,unreviewed
+t122,de,price,Was kostet ein Grundstück in Sfax?,synthetic_draft,unreviewed
+t123,de,documents,Welche Papiere muss ich einreichen?,synthetic_draft,unreviewed
+t124,de,procedure,Wie fange ich mit dem Bau einer Fabrik an?,synthetic_draft,unreviewed
+t125,de,surface,"Ich brauche 750 m², nicht 2000.",synthetic_draft,unreviewed
+t126,de,deadline,Kann ich den Antrag vor dem 15. Dezember abgeben?,synthetic_draft,unreviewed
+t127,de,incentives,Gibt es Steuervergünstigungen?,synthetic_draft,unreviewed
+t128,de,clarify,Und was ist mit dem anderen Gebiet?,synthetic_draft,unreviewed
+t137,tr,availability,Bizerte'de boş arsa var mı?,synthetic_draft,unreviewed
+t138,tr,price,Sfax'ta bir arsa kaç para?,synthetic_draft,unreviewed
+t139,tr,documents,Dosyaya hangi evrakları eklemeliyim?,synthetic_draft,unreviewed
+t140,tr,procedure,Fabrika açmak için nereden başlamalıyım?,synthetic_draft,unreviewed
+t141,tr,surface,2000 değil 750 m² istiyorum.,synthetic_draft,unreviewed
+t142,tr,deadline,15 Aralık'tan önce başvurabilir miyim?,synthetic_draft,unreviewed
+t143,tr,incentives,Vergi indirimi var mı?,synthetic_draft,unreviewed
+t144,tr,clarify,Peki diğer bölge?,synthetic_draft,unreviewed

@@ -1,0 +1,50 @@
+{
+  "aeb": {
+    "status": "unavailable",
+    "reason": "RuntimeError: Local TTS voice unavailable"
+  },
+  "ar": {
+    "status": "unavailable",
+    "reason": "RuntimeError: Local TTS voice unavailable"
+  },
+  "fr": {
+    "engine": "espeak",
+    "voice": "fr",
+    "dialect_authentic": false,
+    "generation_s": 0.010303061999820784,
+    "duration_s": 6.111292517006802,
+    "status": "wav_generated"
+  },
+  "en": {
+    "engine": "espeak",
+    "voice": "en",
+    "dialect_authentic": false,
+    "generation_s": 0.009371274000159246,
+    "duration_s": 6.321678004535148,
+    "status": "wav_generated"
+  },
+  "arq": {
+    "status": "unavailable",
+    "reason": "RuntimeError: Local TTS voice unavailable"
+  },
+  "ayl": {
+    "status": "unavailable",
+    "reason": "RuntimeError: Local TTS voice unavailable"
+  },
+  "de": {
+    "engine": "espeak",
+    "voice": "de",
+    "dialect_authentic": false,
+    "generation_s": 0.009896267000158332,
+    "duration_s": 6.877460317460318,
+    "status": "wav_generated"
+  },
+  "tr": {
+    "engine": "espeak",
+    "voice": "tr",
+    "dialect_authentic": false,
+    "generation_s": 0.012150124000072537,
+    "duration_s": 7.212789115646259,
+    "status": "wav_generated"
+  }
+}

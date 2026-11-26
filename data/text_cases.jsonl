@@ -1,0 +1,144 @@
+{"id": "t001", "language": "aeb", "split": "dev", "intent": "availability", "text": "فما مقاسم فارغة في بن عروس؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t002", "language": "aeb", "split": "dev", "intent": "price", "text": "قداش سوم المتر في المنطقة الصناعية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t003", "language": "aeb", "split": "dev", "intent": "documents", "text": "شنوة الأوراق اللازمة باش نقدّم مطلب؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t004", "language": "aeb", "split": "dev", "intent": "procedure", "text": "كيفاش ناخذ قطعة أرض من الوكالة؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t005", "language": "aeb", "split": "dev", "intent": "surface", "text": "نحب مقسم مساحتو 500 متر مربع", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t006", "language": "aeb", "split": "dev", "intent": "deadline", "text": "وقتاش آخر أجل للتسجيل؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t007", "language": "aeb", "split": "dev", "intent": "availability", "text": "fama terrain disponible fi bizerte?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t008", "language": "aeb", "split": "dev", "intent": "price", "text": "9addech soum el mètre carré?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t009", "language": "aeb", "split": "dev", "intent": "documents", "text": "chnowa les papiers elli lezemni?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t010", "language": "aeb", "split": "dev", "intent": "procedure", "text": "kifech na3mel demande mta3 terrain?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t011", "language": "aeb", "split": "dev", "intent": "surface", "text": "n7eb terrain 1000 m²", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t012", "language": "aeb", "split": "dev", "intent": "deadline", "text": "wa9tech deadline mta3 dépôt?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t013", "language": "aeb", "split": "dev", "intent": "incentives", "text": "شنوة الامتيازات للاستثمار؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t014", "language": "aeb", "split": "dev", "intent": "clarify", "text": "ما فهمتش، وضحلي أكثر", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t015", "language": "aeb", "split": "dev", "intent": "incentives", "text": "fama avantages fiscaux lel investissement?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t016", "language": "aeb", "split": "dev", "intent": "clarify", "text": "ma fhemtch chnowa ta9sed", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t017", "language": "aeb", "split": "eval", "intent": "availability", "text": "بالله فما بلاصة شاغرة في زغوان؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t018", "language": "aeb", "split": "eval", "intent": "price", "text": "بقداش المتر في سوسة موش في صفاقس؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t019", "language": "aeb", "split": "eval", "intent": "documents", "text": "شنية الوثايق اللي نجيبهم معايا للـ dossier؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t020", "language": "aeb", "split": "eval", "intent": "procedure", "text": "نحب نعمل usine، منين نبدأ؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t021", "language": "aeb", "split": "eval", "intent": "surface", "text": "ما نحبش 2000 متر مربع، نحب 750 m²", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t022", "language": "aeb", "split": "eval", "intent": "deadline", "text": "ينجم الواحد يودع المطلب قبل 15 ديسمبر؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t023", "language": "aeb", "split": "eval", "intent": "availability", "text": "3aslema, famma lot disponible fi Mghira?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t024", "language": "aeb", "split": "eval", "intent": "price", "text": "b9addech el prix unitaire fi Sfax?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t025", "language": "aeb", "split": "eval", "intent": "documents", "text": "chneya les pièces justificatives elli na7tajhom?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t026", "language": "aeb", "split": "eval", "intent": "procedure", "text": "najem na3mel réservation en ligne walla le?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t027", "language": "aeb", "split": "eval", "intent": "surface", "text": "n7eb 800 m2 moch 1800", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t028", "language": "aeb", "split": "eval", "intent": "deadline", "text": "emta nsakker dossier?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t029", "language": "aeb", "split": "eval", "intent": "incentives", "text": "فمّا تشجيعات جبائية للصناعيين؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t030", "language": "aeb", "split": "eval", "intent": "clarify", "text": "و بالنسبة للأخرى؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t031", "language": "aeb", "split": "eval", "intent": "incentives", "text": "chneya el aides lel projet jdid?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t032", "language": "aeb", "split": "eval", "intent": "clarify", "text": "w heki 9addech?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t033", "language": "ar", "split": "dev", "intent": "availability", "text": "هل توجد قطع صناعية متاحة؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t034", "language": "ar", "split": "dev", "intent": "price", "text": "ما سعر المتر المربع؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t035", "language": "ar", "split": "dev", "intent": "documents", "text": "ما الوثائق المطلوبة؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t036", "language": "ar", "split": "dev", "intent": "procedure", "text": "كيف أقدم طلب تخصيص أرض صناعية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t037", "language": "ar", "split": "dev", "intent": "surface", "text": "أبحث عن مساحة 500 متر مربع", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t038", "language": "ar", "split": "dev", "intent": "deadline", "text": "ما الموعد النهائي لإيداع الطلب؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t039", "language": "ar", "split": "dev", "intent": "incentives", "text": "ما الحوافز الاستثمارية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t040", "language": "ar", "split": "dev", "intent": "clarify", "text": "يرجى توضيح المقصود", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t041", "language": "ar", "split": "eval", "intent": "availability", "text": "هل تتوفر أراض صناعية في بنزرت؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t042", "language": "ar", "split": "eval", "intent": "price", "text": "كم تبلغ تكلفة القطعة؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t043", "language": "ar", "split": "eval", "intent": "documents", "text": "ما المستندات اللازمة لإكمال الملف؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t044", "language": "ar", "split": "eval", "intent": "procedure", "text": "أريد معرفة إجراءات إنشاء مصنع", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t045", "language": "ar", "split": "eval", "intent": "surface", "text": "أحتاج إلى 750 مترا مربعا وليس 2000", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t046", "language": "ar", "split": "eval", "intent": "deadline", "text": "هل يمكن التسجيل قبل 15 ديسمبر؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t047", "language": "ar", "split": "eval", "intent": "incentives", "text": "هل توجد إعفاءات ضريبية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t048", "language": "ar", "split": "eval", "intent": "clarify", "text": "وماذا عن المنطقة الأخرى؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t049", "language": "fr", "split": "dev", "intent": "availability", "text": "Y a-t-il des lots disponibles ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t050", "language": "fr", "split": "dev", "intent": "price", "text": "Quel est le prix au mètre carré ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t051", "language": "fr", "split": "dev", "intent": "documents", "text": "Quels documents faut-il fournir ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t052", "language": "fr", "split": "dev", "intent": "procedure", "text": "Comment déposer une demande de terrain industriel ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t053", "language": "fr", "split": "dev", "intent": "surface", "text": "Je cherche une parcelle de 500 m².", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t054", "language": "fr", "split": "dev", "intent": "deadline", "text": "Quelle est la date limite de dépôt ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t055", "language": "fr", "split": "dev", "intent": "incentives", "text": "Quelles sont les incitations à l’investissement ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t056", "language": "fr", "split": "dev", "intent": "clarify", "text": "Pouvez-vous préciser votre question ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t057", "language": "fr", "split": "eval", "intent": "availability", "text": "Reste-t-il des terrains libres à Bizerte ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t058", "language": "fr", "split": "eval", "intent": "price", "text": "Combien coûte un lot à Sfax ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t059", "language": "fr", "split": "eval", "intent": "documents", "text": "Quelles pièces joindre au dossier ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t060", "language": "fr", "split": "eval", "intent": "procedure", "text": "Par où commencer pour ouvrir une usine ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t061", "language": "fr", "split": "eval", "intent": "surface", "text": "Je veux 750 m², pas 2000.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t062", "language": "fr", "split": "eval", "intent": "deadline", "text": "Puis-je déposer le dossier avant le 15 décembre ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t063", "language": "fr", "split": "eval", "intent": "incentives", "text": "Existe-t-il des avantages fiscaux ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t064", "language": "fr", "split": "eval", "intent": "clarify", "text": "Et pour l’autre zone ?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t065", "language": "en", "split": "dev", "intent": "availability", "text": "Are industrial plots available?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t066", "language": "en", "split": "dev", "intent": "price", "text": "What is the price per square meter?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t067", "language": "en", "split": "dev", "intent": "documents", "text": "Which documents are required?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t068", "language": "en", "split": "dev", "intent": "procedure", "text": "How do I apply for industrial land?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t069", "language": "en", "split": "dev", "intent": "surface", "text": "I need a 500 square meter plot.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t070", "language": "en", "split": "dev", "intent": "deadline", "text": "What is the application deadline?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t071", "language": "en", "split": "dev", "intent": "incentives", "text": "What investment incentives are available?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t072", "language": "en", "split": "dev", "intent": "clarify", "text": "Could you clarify what you mean?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t073", "language": "en", "split": "eval", "intent": "availability", "text": "Is there any vacant land in Bizerte?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t074", "language": "en", "split": "eval", "intent": "price", "text": "How much does a plot in Sfax cost?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t075", "language": "en", "split": "eval", "intent": "documents", "text": "What paperwork should I bring?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t076", "language": "en", "split": "eval", "intent": "procedure", "text": "Where do I start if I want to build a factory?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t077", "language": "en", "split": "eval", "intent": "surface", "text": "I want 750 m², not 2000.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t078", "language": "en", "split": "eval", "intent": "deadline", "text": "Can I submit before December 15?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t079", "language": "en", "split": "eval", "intent": "incentives", "text": "Are there any tax breaks?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t080", "language": "en", "split": "eval", "intent": "clarify", "text": "What about the other area?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t081", "language": "arq", "split": "dev", "intent": "availability", "text": "كاين قطع أرض صناعية فارغين؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t082", "language": "arq", "split": "dev", "intent": "price", "text": "شحال يسوى المتر المربع؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t083", "language": "arq", "split": "dev", "intent": "documents", "text": "واش من ورق لازم ندفع؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t084", "language": "arq", "split": "dev", "intent": "procedure", "text": "كيفاش ندير باش نطلب أرض صناعية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t085", "language": "arq", "split": "dev", "intent": "surface", "text": "راني حاب قطعة فيها 500 متر مربع", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t086", "language": "arq", "split": "dev", "intent": "deadline", "text": "وقتاش يسال التسجيل؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t087", "language": "arq", "split": "dev", "intent": "incentives", "text": "كاين تسهيلات للمستثمرين؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t088", "language": "arq", "split": "dev", "intent": "clarify", "text": "ما فهمتش واش تقصد", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t089", "language": "arq", "split": "eval", "intent": "availability", "text": "واش مازال كاين terrain في بنزرت؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t090", "language": "arq", "split": "eval", "intent": "price", "text": "بشحال هذي الأرض في صفاقس؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t091", "language": "arq", "split": "eval", "intent": "documents", "text": "واش لازملي في الدوسي؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t092", "language": "arq", "split": "eval", "intent": "procedure", "text": "حاب نفتح مصنع كيفاش نبدا؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t093", "language": "arq", "split": "eval", "intent": "surface", "text": "راني باغي 750 متر ماشي 2000", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t094", "language": "arq", "split": "eval", "intent": "deadline", "text": "نقدر ندفع قبل 15 ديسمبر؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t095", "language": "arq", "split": "eval", "intent": "incentives", "text": "كاين إعفاءات من الضريبة ولا والو؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t096", "language": "arq", "split": "eval", "intent": "clarify", "text": "و هذيك الأخرى؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t097", "language": "ayl", "split": "dev", "intent": "availability", "text": "فيه أراضي صناعية فاضية؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t098", "language": "ayl", "split": "dev", "intent": "price", "text": "بكم سعر المتر هني؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t099", "language": "ayl", "split": "dev", "intent": "documents", "text": "شن الأوراق اللي نبيها؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t100", "language": "ayl", "split": "dev", "intent": "procedure", "text": "كيف ندير باش نطلب أرض؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t101", "language": "ayl", "split": "dev", "intent": "surface", "text": "نبي قطعة 500 متر مربع", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t102", "language": "ayl", "split": "dev", "intent": "deadline", "text": "إمتى يقفل التقديم؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t103", "language": "ayl", "split": "dev", "intent": "incentives", "text": "فيه مزايا للمستثمرين؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t104", "language": "ayl", "split": "dev", "intent": "clarify", "text": "شن تقصد بالله؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t105", "language": "ayl", "split": "eval", "intent": "availability", "text": "فيه قطعة متوفرة في بنزرت توا؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t106", "language": "ayl", "split": "eval", "intent": "price", "text": "بكم تجيني الأرض في صفاقس؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t107", "language": "ayl", "split": "eval", "intent": "documents", "text": "شن المستندات اللي نجيبها معاي؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t108", "language": "ayl", "split": "eval", "intent": "procedure", "text": "نبي نفتح مصنع شن ندير أول حاجة؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t109", "language": "ayl", "split": "eval", "intent": "surface", "text": "نبي 750 متر مش 2000", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t110", "language": "ayl", "split": "eval", "intent": "deadline", "text": "نقدر نقدم قبل 15 ديسمبر؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t111", "language": "ayl", "split": "eval", "intent": "incentives", "text": "فيه تخفيضات ضريبية للمشروع؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t112", "language": "ayl", "split": "eval", "intent": "clarify", "text": "والمنطقة الثانية كيف؟", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t113", "language": "de", "split": "dev", "intent": "availability", "text": "Sind Industriegrundstücke verfügbar?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t114", "language": "de", "split": "dev", "intent": "price", "text": "Wie hoch ist der Quadratmeterpreis?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t115", "language": "de", "split": "dev", "intent": "documents", "text": "Welche Unterlagen werden benötigt?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t116", "language": "de", "split": "dev", "intent": "procedure", "text": "Wie beantrage ich ein Industriegrundstück?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t117", "language": "de", "split": "dev", "intent": "surface", "text": "Ich suche ein Grundstück mit 500 Quadratmetern.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t118", "language": "de", "split": "dev", "intent": "deadline", "text": "Wann endet die Antragsfrist?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t119", "language": "de", "split": "dev", "intent": "incentives", "text": "Welche Investitionsanreize gibt es?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t120", "language": "de", "split": "dev", "intent": "clarify", "text": "Können Sie das genauer erklären?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t121", "language": "de", "split": "eval", "intent": "availability", "text": "Gibt es noch freie Flächen in Bizerte?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t122", "language": "de", "split": "eval", "intent": "price", "text": "Was kostet ein Grundstück in Sfax?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t123", "language": "de", "split": "eval", "intent": "documents", "text": "Welche Papiere muss ich einreichen?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t124", "language": "de", "split": "eval", "intent": "procedure", "text": "Wie fange ich mit dem Bau einer Fabrik an?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t125", "language": "de", "split": "eval", "intent": "surface", "text": "Ich brauche 750 m², nicht 2000.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t126", "language": "de", "split": "eval", "intent": "deadline", "text": "Kann ich den Antrag vor dem 15. Dezember abgeben?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t127", "language": "de", "split": "eval", "intent": "incentives", "text": "Gibt es Steuervergünstigungen?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t128", "language": "de", "split": "eval", "intent": "clarify", "text": "Und was ist mit dem anderen Gebiet?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t129", "language": "tr", "split": "dev", "intent": "availability", "text": "Sanayi arsası mevcut mu?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t130", "language": "tr", "split": "dev", "intent": "price", "text": "Metrekare fiyatı ne kadar?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t131", "language": "tr", "split": "dev", "intent": "documents", "text": "Hangi belgeler gerekiyor?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t132", "language": "tr", "split": "dev", "intent": "procedure", "text": "Sanayi arsasına nasıl başvurabilirim?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t133", "language": "tr", "split": "dev", "intent": "surface", "text": "500 metrekare arsa arıyorum.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t134", "language": "tr", "split": "dev", "intent": "deadline", "text": "Son başvuru tarihi ne zaman?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t135", "language": "tr", "split": "dev", "intent": "incentives", "text": "Yatırım teşvikleri nelerdir?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t136", "language": "tr", "split": "dev", "intent": "clarify", "text": "Ne demek istediğinizi açıklar mısınız?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t137", "language": "tr", "split": "eval", "intent": "availability", "text": "Bizerte'de boş arsa var mı?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t138", "language": "tr", "split": "eval", "intent": "price", "text": "Sfax'ta bir arsa kaç para?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t139", "language": "tr", "split": "eval", "intent": "documents", "text": "Dosyaya hangi evrakları eklemeliyim?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t140", "language": "tr", "split": "eval", "intent": "procedure", "text": "Fabrika açmak için nereden başlamalıyım?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t141", "language": "tr", "split": "eval", "intent": "surface", "text": "2000 değil 750 m² istiyorum.", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t142", "language": "tr", "split": "eval", "intent": "deadline", "text": "15 Aralık'tan önce başvurabilir miyim?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t143", "language": "tr", "split": "eval", "intent": "incentives", "text": "Vergi indirimi var mı?", "provenance": "synthetic_draft", "review_status": "unreviewed"}
+{"id": "t144", "language": "tr", "split": "eval", "intent": "clarify", "text": "Peki diğer bölge?", "provenance": "synthetic_draft", "review_status": "unreviewed"}

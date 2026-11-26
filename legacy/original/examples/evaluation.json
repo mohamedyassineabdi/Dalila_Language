@@ -1,0 +1,12 @@
+[
+  {"id":"T01","category":"greeting","input":"عسلامة، شنية أحوالك؟","expected":"Natural greeting in Tunisian"},
+  {"id":"T02","category":"arabizi","input":"N7eb na3ref kifech nabda projet sghir fi Tounes.","expected":"Explains starting a small project; no invented legal details"},
+  {"id":"T03","category":"negation","input":"ما قلتلكش تبدل الرونديفو، قلتلك أكدلي عليه.","expected":"Confirm appointment, do not change it"},
+  {"id":"T04","category":"code_switching","input":"Le site ma yekhdemch, n7eb n3amer formulaire en ligne.","expected":"Understands website failure and online form"},
+  {"id":"T05","category":"idiom","input":"يعطيك الصحة، ما قصرتش.","expected":"Understands thanks, not literal health"},
+  {"id":"T06","category":"ambiguity","input":"نمشي توة وإلا نستنى شوية؟","expected":"Ask what situation if context is absent"},
+  {"id":"T07","category":"institutional","input":"نحب نعرف كيفاش ناخذ مقسم صناعي.","expected":"Understands industrial plot; avoids invented official procedure"},
+  {"id":"T08","category":"number","input":"عندي ثلاثة ملفات، ناقصني كان واحد.","expected":"Understands three files and one missing"},
+  {"id":"T09","category":"regional","input":"كفاش نجم نعاونك؟","expected":"Understands regional variant"},
+  {"id":"T10","category":"context","turns":["نحب نشري PC بألفين دينار.","وإلا فما حل آخر أرخص؟"],"expected":"Retains PC and 2000 TND budget"}
+]

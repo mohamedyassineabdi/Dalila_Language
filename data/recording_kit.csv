@@ -1,0 +1,81 @@
+﻿prompt_id,language,scenario,prompt_draft,speaker_id,self_reported_region,consent,recording_file,human_verbatim_reference,reviewer_id,critical_numbers,critical_entities,critical_negation,review_status
+s001,aeb,availability,فمّاش مقسم فارغ في سيدي بوزيد؟,,,,,,,,,,unrecorded_unreviewed
+s002,aeb,price,billehi soum el mètre fi gabes b9addech?,,,,,,,,,,unrecorded_unreviewed
+s003,aeb,documents,شنية les documents اللازمة للدوسي متاعي؟,,,,,,,,,,unrecorded_unreviewed
+s004,aeb,procedure,كيفاش نعمل باش نودع مطلب متاع مصنع؟,,,,,,,,,,unrecorded_unreviewed
+s005,aeb,surface,نحب 1250 m² موش 2500 في القيروان,,,,,,,,,,unrecorded_unreviewed
+s006,aeb,deadline,wa9tech e5er délai bech n9adem?,,,,,,,,,,unrecorded_unreviewed
+s007,aeb,incentives,فما إعفاء جبائي للمشروع الجديد؟,,,,,,,,,,unrecorded_unreviewed
+s008,aeb,clarify,فسّرلي أكثر شنوة تقصد؟,,,,,,,,,,unrecorded_unreviewed
+s009,aeb,availability,n7eb na3ref ken fama blasa dispo fi nebel,,,,,,,,,,unrecorded_unreviewed
+s010,aeb,price,قداش tarif متاع المتر في منوبة؟,,,,,,,,,,unrecorded_unreviewed
+s011,aeb,documents,chneya awra9 elli lezemni lel dossier?,,,,,,,,,,unrecorded_unreviewed
+s012,aeb,procedure,bahi kifech nabda les démarches?,,,,,,,,,,unrecorded_unreviewed
+s013,aeb,surface,moch 900 m2 n7eb 1800 m2 fi Sfax,,,,,,,,,,unrecorded_unreviewed
+s014,aeb,deadline,نهار 3 جانفي ينجم يكون آخر أجل؟,,,,,,,,,,unrecorded_unreviewed
+s015,aeb,incentives,tnajjem t9olli chnowa les subventions?,,,,,,,,,,unrecorded_unreviewed
+s016,aeb,clarify,"ma fhemtch, fasserli bchwaya",,,,,,,,,,unrecorded_unreviewed
+s017,aeb,availability,ما فماش terrain disponible في قابس؟,,,,,,,,,,unrecorded_unreviewed
+s018,aeb,price,السوم بالدينار ولا بالأورو في زغوان؟,,,,,,,,,,unrecorded_unreviewed
+s019,aeb,documents,ما نحبش نبعث dossier ناقص، شنوة الأوراق؟,,,,,,,,,,unrecorded_unreviewed
+s020,aeb,surface,n7eb 2.5 ha mouch 25 ha,,,,,,,,,,unrecorded_unreviewed
+s021,aeb,surface,مساحة ٩٠٠ متر مربع موش ١٩٠٠ في نابل,,,,,,,,,,unrecorded_unreviewed
+s022,aeb,deadline,ينجم الواحد يقدم قبل 31/12؟,,,,,,,,,,unrecorded_unreviewed
+s023,aeb,incentives,شنيا les aides pour projet industriel?,,,,,,,,,,unrecorded_unreviewed
+s024,aeb,availability,famma lot vacant fi ben 3arous?,,,,,,,,,,unrecorded_unreviewed
+s025,ar,availability,هل توجد قطعة أرض صناعية متاحة في باجة؟,,,,,,,,,,unrecorded_unreviewed
+s026,ar,price,أريد معرفة تكلفة المتر في صفاقس,,,,,,,,,,unrecorded_unreviewed
+s027,ar,documents,ما المستندات التي يجب تقديمها؟,,,,,,,,,,unrecorded_unreviewed
+s028,ar,procedure,كيفية إيداع طلب تخصيص أرض؟,,,,,,,,,,unrecorded_unreviewed
+s029,ar,surface,أرغب في مساحة 600 متر مربع وليس 1600,,,,,,,,,,unrecorded_unreviewed
+s030,ar,deadline,ما هو تاريخ انتهاء فترة التقديم؟,,,,,,,,,,unrecorded_unreviewed
+s031,ar,incentives,هل توجد حوافز ضريبية للمستثمر؟,,,,,,,,,,unrecorded_unreviewed
+s032,ar,clarify,يرجى توضيح المقصود بالطلب,,,,,,,,,,unrecorded_unreviewed
+s033,fr,availability,Reste-t-il des parcelles disponibles à Bizerte ?,,,,,,,,,,unrecorded_unreviewed
+s034,fr,price,Quel est le tarif au mètre carré à Sousse ?,,,,,,,,,,unrecorded_unreviewed
+s035,fr,documents,Quels justificatifs dois-je joindre au dossier ?,,,,,,,,,,unrecorded_unreviewed
+s036,fr,procedure,Comment déposer ma demande de terrain industriel ?,,,,,,,,,,unrecorded_unreviewed
+s037,fr,surface,"Je veux 1250 m², pas 2500 m² à Zaghouan.",,,,,,,,,,unrecorded_unreviewed
+s038,fr,deadline,Quelle est la date limite de dépôt ?,,,,,,,,,,unrecorded_unreviewed
+s039,fr,incentives,Quelles aides fiscales existent pour une usine ?,,,,,,,,,,unrecorded_unreviewed
+s040,fr,clarify,Pouvez-vous préciser ce que cela signifie ?,,,,,,,,,,unrecorded_unreviewed
+s041,en,availability,Are any industrial lots still vacant in Tunis?,,,,,,,,,,unrecorded_unreviewed
+s042,en,price,What is the cost per square metre in Sfax?,,,,,,,,,,unrecorded_unreviewed
+s043,en,documents,Which supporting documents do I need?,,,,,,,,,,unrecorded_unreviewed
+s044,en,procedure,How can I apply for a plot?,,,,,,,,,,unrecorded_unreviewed
+s045,en,surface,"I want 1200 m², not 2200, in Nabeul.",,,,,,,,,,unrecorded_unreviewed
+s046,en,deadline,When is the closing date for applications?,,,,,,,,,,unrecorded_unreviewed
+s047,en,incentives,Are there grants for new manufacturers?,,,,,,,,,,unrecorded_unreviewed
+s048,en,clarify,What do you mean by that?,,,,,,,,,,unrecorded_unreviewed
+s049,arq,availability,واش كاين أرض متوفرة في بنزرت؟,,,,,,,,,,unrecorded_unreviewed
+s050,arq,price,شحال السعر للمتر في سوسة؟,,,,,,,,,,unrecorded_unreviewed
+s051,arq,documents,واش هما الوثائق لي نديهم؟,,,,,,,,,,unrecorded_unreviewed
+s052,arq,procedure,راني حاب نعرف كيفاش ندير الطلب,,,,,,,,,,unrecorded_unreviewed
+s053,arq,surface,نحب 800 متر مربع ماشي 1800,,,,,,,,,,unrecorded_unreviewed
+s054,arq,deadline,وقتاش آخر أجل باش ندفع الملف؟,,,,,,,,,,unrecorded_unreviewed
+s055,arq,incentives,كاين إعفاءات ضريبية ولا لا؟,,,,,,,,,,unrecorded_unreviewed
+s056,arq,clarify,واش تقصد؟ فسرلي شوية,,,,,,,,,,unrecorded_unreviewed
+s057,ayl,availability,فيه أرض متوفرة في نابل؟ نبي نعرف,,,,,,,,,,unrecorded_unreviewed
+s058,ayl,price,نبي نعرف سعر المتر في بنزرت,,,,,,,,,,unrecorded_unreviewed
+s059,ayl,documents,شن الأوراق اللي لازم نجيبهن؟,,,,,,,,,,unrecorded_unreviewed
+s060,ayl,procedure,نبي نقدم على أرض كيف ندير؟,,,,,,,,,,unrecorded_unreviewed
+s061,ayl,surface,نبي 1200 متر مربع مش 2000,,,,,,,,,,unrecorded_unreviewed
+s062,ayl,deadline,إمتى آخر موعد للتقديم؟,,,,,,,,,,unrecorded_unreviewed
+s063,ayl,incentives,فيه حوافز للمصانع الجديدة؟,,,,,,,,,,unrecorded_unreviewed
+s064,ayl,clarify,شن تقصد؟ وضحلي بالله,,,,,,,,,,unrecorded_unreviewed
+s065,de,availability,Sind in Tunis noch Grundstücke verfügbar?,,,,,,,,,,unrecorded_unreviewed
+s066,de,price,Wie hoch ist der Preis pro Quadratmeter in Sfax?,,,,,,,,,,unrecorded_unreviewed
+s067,de,documents,Welche Dokumente muss ich mitbringen?,,,,,,,,,,unrecorded_unreviewed
+s068,de,procedure,Wie kann ich ein Industriegrundstück beantragen?,,,,,,,,,,unrecorded_unreviewed
+s069,de,surface,"Ich möchte 1200 m², nicht 2000 m².",,,,,,,,,,unrecorded_unreviewed
+s070,de,deadline,Wann ist die Frist für den Antrag?,,,,,,,,,,unrecorded_unreviewed
+s071,de,incentives,Gibt es Fördermittel für neue Fabriken?,,,,,,,,,,unrecorded_unreviewed
+s072,de,clarify,Was bedeutet das genau?,,,,,,,,,,unrecorded_unreviewed
+s073,tr,availability,Sfax'ta boş sanayi arsası var mı?,,,,,,,,,,unrecorded_unreviewed
+s074,tr,price,Bizerte'de metrekare fiyatı nedir?,,,,,,,,,,unrecorded_unreviewed
+s075,tr,documents,Başvuru için hangi belgeler gerekli?,,,,,,,,,,unrecorded_unreviewed
+s076,tr,procedure,Sanayi arsası için nasıl başvuru yapabilirim?,,,,,,,,,,unrecorded_unreviewed
+s077,tr,surface,"2000 değil, 1200 metrekare istiyorum.",,,,,,,,,,unrecorded_unreviewed
+s078,tr,deadline,Son başvuru tarihi nedir?,,,,,,,,,,unrecorded_unreviewed
+s079,tr,incentives,Yeni fabrikalara teşvik var mı?,,,,,,,,,,unrecorded_unreviewed
+s080,tr,clarify,Bunu biraz açıklar mısınız?,,,,,,,,,,unrecorded_unreviewed

@@ -1,0 +1,21 @@
+{
+  "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "logical_cpu_count": 5,
+  "available_ram_gib": 5.81,
+  "dependencies": {
+    "torch": true,
+    "transformers": false,
+    "faster_whisper": false,
+    "ctranslate2": false,
+    "datasets": false,
+    "sklearn": true,
+    "gradio": true,
+    "fastapi": true
+  },
+  "espeak": "/usr/bin/espeak",
+  "ffmpeg": "/usr/bin/ffmpeg",
+  "network": "DNS failed for Hugging Face, PyPI, Zenodo during this execution",
+  "model_download_attempt": "tn-small failed; subsequent metadata/download task interrupted by tool timeout; no model weights obtained",
+  "neural_experiments": "not run"
+}

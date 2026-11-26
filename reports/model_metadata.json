@@ -1,0 +1,26 @@
+{
+  "montachouig/whisperX-tunisian": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "montachouig/whisper-large-v3-tunisian": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "TheBiggyBang/whisper-small-tunisian-derja-ct2": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "oddadmix/Whisperv3-tunisian-codeswitch": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "algerian-nlp/NUMALIA": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "Ghazouaniwala/silma-tts-derja": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "oddadmix/lahgtna-omnivoice-v2": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  },
+  "ESPRIT-Group/ESPRIT-Derja-Qwen3-8B-v2": {
+    "error": "<urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+}
