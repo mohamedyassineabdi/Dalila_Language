@@ -128,6 +128,14 @@ def speak(text,language,output):
     if not text.strip() or len(text)>1200: raise ValueError('Speech text must be 1–1200 characters')
     voice=VOICE_MAP[language]
     start=time.perf_counter()
+    if language=='aeb':
+        from .tunisian_voice import speak_tunisian
+        try:
+            result=speak_tunisian(text,output)
+            if not _valid_wave(output):raise RuntimeError('Invalid Tunisian audio')
+            return dict(result,requested_language=language,generation_s=time.perf_counter()-start)
+        except Exception:
+            Path(output).unlink(missing_ok=True)
     from .neural_voice import speak_neural
     try:
         result=speak_neural(text,voice,output)

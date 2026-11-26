@@ -1,3 +1,4 @@
+param([switch]$TunisianResearchVoice, [switch]$DisableTunisianResearchVoice)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 $env:ASR_DEVICE = 'cpu'
@@ -21,6 +22,29 @@ if ($LASTEXITCODE -ne 0) {
     & $python -m pip install -r requirements-neural-tts.txt
     if ($LASTEXITCODE -ne 0) { Write-Warning 'Neural speech unavailable; offline fallback remains.' }
 }
+$voiceRoot = Join-Path $PSScriptRoot '.venv-tunisian'
+$voicePython = Join-Path $voiceRoot 'Scripts\python.exe'
+$voiceMarker = Join-Path $voiceRoot 'research-accepted'
+if ($DisableTunisianResearchVoice) {
+    Remove-Item $voiceMarker -ErrorAction SilentlyContinue
+}
+if ($TunisianResearchVoice -and -not $DisableTunisianResearchVoice) {
+    Write-Host 'Enabling OmniVoice CC BY-NC noncommercial research voice; model download about 3.27 GB plus runtime.'
+    if (-not (Test-Path $voicePython)) {
+        & py -3.11 -m venv $voiceRoot
+    }
+    if (Test-Path $voicePython) {
+        & $voicePython -c "import importlib.util,sys; sys.exit(0 if importlib.util.find_spec('omnivoice') else 1)"
+        if ($LASTEXITCODE -ne 0) {
+            & $voicePython -m pip install -r requirements-tunisian-voice.txt
+        }
+        if ($LASTEXITCODE -eq 0) {
+            New-Item -Path $voiceMarker -ItemType File -Force | Out-Null
+        } else { Write-Warning 'OmniVoice installation failed; existing offline voice remains available.' }
+    }
+}
+$env:DALILA_TUNISIAN_RESEARCH = '0'
+if (Test-Path $voiceMarker) { $env:DALILA_TUNISIAN_RESEARCH = '1' }
 $ollama = Get-Command ollama -ErrorAction SilentlyContinue
 if ($ollama) {
     try {
@@ -39,5 +63,5 @@ if ($ollama) {
 } else {
     Write-Warning 'Ollama executable not found. Limited fallback remains available.'
 }
-Write-Host 'Starting Dalila v0.7.0 at http://127.0.0.1:7860'
+Write-Host 'Starting Dalila v0.8.0 at http://127.0.0.1:7860'
 & $python -m uvicorn app:app --host 127.0.0.1 --port 7860

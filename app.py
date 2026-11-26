@@ -11,9 +11,9 @@ from dalila.core import analyze, LANGS
 from dalila.engines import route_asr, speak, packaged_voice_available, VOICE_MAP, warm_asr, general_asr_key
 from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
-from dalila import neural_voice
+from dalila import neural_voice, tunisian_voice
 
-app = FastAPI(title="Dalila Language Lab", version="0.7.0")
+app = FastAPI(title="Dalila Language Lab", version="0.8.0")
 ROOT = Path(__file__).parent
 WARM_STATUS='not_started'
 
@@ -31,6 +31,8 @@ def prepare_local_models():
             logging.getLogger(__name__).warning('ASR prewarm: %s',type(exc).__name__)
         neural_voice.prepare_all()
     threading.Thread(target=prepare,daemon=True,name='dalila-model-preparation').start()
+    if tunisian_voice.enabled():
+        threading.Thread(target=tunisian_voice.prepare,daemon=True,name='dalila-tunisian-voice').start()
 
 
 def _cloud_allowed():
@@ -89,6 +91,7 @@ def capabilities():
         'voice_reply': bool(packaged_voice_available() or os.name=='nt' or __import__('shutil').which('espeak-ng') or __import__('shutil').which('espeak')),
         'packaged_tts': packaged_voice_available(),
         'neural_tts': neural_voice.readiness(),
+        'tunisian_tts': tunisian_voice.readiness(),
         'general_asr': general_asr_key(),
         'asr_warmup': WARM_STATUS,
         'tts_language_map': VOICE_MAP,
