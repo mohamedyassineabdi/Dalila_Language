@@ -98,6 +98,7 @@ const audioPlayer = new Audio();
 let playbackId=0;
 let neuralReady={};
 let tunisianReady='not_enabled';
+let tunisianDetails={};
 window.speechSynthesis?.getVoices();
 audioPlayer.controls=true; audioPlayer.hidden=true; audioPlayer.style.maxWidth='100%';
 $('statusLine').parentElement.after(audioPlayer);
@@ -135,7 +136,8 @@ async function loadCapabilities(){
     const c = await fetch('/capabilities').then(r=>r.json());
     neuralReady=c.neural_tts || {};
     tunisianReady=c.tunisian_tts || 'not_enabled';
-    $('modeLine').textContent = `v${c.version || '0.8.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. ASR: ${c.general_asr} (${c.asr_warmup}) · Neural voices: ${Object.values(neuralReady).filter(x=>x==='ready').length}/5 ready · Tunisian voice: ${tunisianReady}.`;
+    tunisianDetails=c.tunisian_voice_details || {};
+    $('modeLine').textContent = `v${c.version || '0.8.1'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. ASR: ${c.general_asr} (${c.asr_warmup}) · Neural voices: ${Object.values(neuralReady).filter(x=>x==='ready').length}/5 ready · Tunisian voice: ${tunisianReady}${tunisianDetails.reason ? ' ('+tunisianDetails.reason+')' : ''}.`;
 
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
@@ -193,7 +195,7 @@ async function speakLast(reply=lastReply){
       }
     }catch(e){if(current()&&!busy)setStatus('Offline voice unavailable for '+reply.language+'. See advanced details.',true);}
   }
-  if(reply.language==='aeb' && tunisianReady==='ready'){await serverVoice();}
+  if(reply.language==='aeb' && (tunisianReady==='ready' || tunisianDetails.cached_replies>0)){await serverVoice();}
   else if(neuralReady[locale?.split('-')[0]]==='ready' && !(reply.language==='aeb' && local?.lang.toLowerCase()==='ar-tn')){await serverVoice();}
   else if(local){
     const u=new SpeechSynthesisUtterance(speech);

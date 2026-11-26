@@ -123,3 +123,15 @@ def test_base_preserves_tunisian_specialist(monkeypatch):
     monkeypatch.setattr(engines,'transcribe',transcribe)
     monkeypatch.setattr('dalila.semantic.detect',lambda text:{'label':'aeb','best_guess':'aeb'})
     assert engines.route_asr('fake')['model']=='tn-small' and calls==['base','tn-small']
+
+
+def test_auto_guided_skips_model_probe(monkeypatch):
+    monkeypatch.setattr('dalila.llm.installed_ollama_model',lambda:pytest.fail('unnecessary model probe'))
+    r=TestClient(app).post('/chat',json={'text':'نحب نحل مشروع صغير تنجم تعاوني','language':'aeb'})
+    assert r.status_code==200 and r.json()['semantic_backend']=='guided'
+
+def test_auto_domain_skips_model(monkeypatch):
+    monkeypatch.setattr('dalila.llm.installed_ollama_model',lambda:pytest.fail('unnecessary model probe'))
+    monkeypatch.setattr('dalila.llm.semantic_json',lambda *a:pytest.fail('unnecessary model call'))
+    r=TestClient(app).post('/chat',json={'text':'ما نحبّش نبدّل المطلب، نحب نكمّل الإجراءات.','language':'aeb'})
+    assert r.status_code==200 and r.json()['semantic_backend']=='baseline'
