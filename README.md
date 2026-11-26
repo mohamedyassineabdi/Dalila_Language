@@ -1,91 +1,324 @@
-# Dalila Language Lab — Advanced research release (0.2.0)
+# Dalila Language Lab
 
-A standalone multilingual language/voice subsystem for the AFI hackathon. **No AFI data repository changes, no factual AFI answering, no cloud by default.** This package is a research prototype, not production-ready. It recovers the original Derja AI Lab and adds an independent FastAPI application, conservative semantic routing and reproducible experiments.
+**Multilingual text and voice assistant for the AFI hackathon — v0.8.1**
 
-## 1. Start on Windows
+Dalila is a standalone research prototype for understanding Tunisian Arabic (Derja), Arabizi, Modern Standard Arabic, French, English, Algerian Arabic, Libyan Arabic, German and Turkish. It accepts typed messages and microphone recordings, automatically chooses local models and generates spoken replies.
 
-Install Python 3.11 (including the Windows Python launcher). Extract the ZIP to a separate directory, open PowerShell inside `Dalila_Language_Lab_Advanced`, then:
+**Start here if you are a teammate.** You do not need to choose models in the interface, obtain API keys, download a ZIP, or modify any code. The recommended path is Windows + PowerShell + Ollama. This module does not connect to the verified AFI knowledge base yet; it must not be presented as a factual AFI assistant.
+
+[![Regression tests](https://github.com/mohamedyassineabdi/Dalila_Language/actions/workflows/tests.yml/badge.svg)](https://github.com/mohamedyassineabdi/Dalila_Language/actions/workflows/tests.yml)
+
+## 1. Quick start — Windows 10/11
+
+### Prerequisites (install once)
+
+| Software | Where to obtain it |
+|---|---|
+| Git | https://git-scm.com/download/win |
+| Python **3.11**, 64-bit, including the Python launcher | https://www.python.org/downloads/ |
+| Ollama for Windows | https://ollama.com/download/windows |
+
+Use a normal PowerShell terminal. Check installation with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\setup.ps1
+git --version
+py -3.11 --version
+ollama --version
+```
+
+If a command is missing, install the relevant software and reopen PowerShell. Ollama is needed for open-ended conversational generation; the app can run with limited controlled replies without it. A browser with microphone permission is needed for voice input.
+
+**Hardware planning:** a 64-bit x86 PC, 16 GB RAM and at least 20 GB free disk space are recommended starting points, not guaranteed minimums. The full experimental Tunisian neural voice and simultaneous LLM/ASR can need more RAM and disk; 32 GB RAM is preferable for experimentation. CPU mode works without a GPU. Internet is needed for installation and initial public model downloads. No paid account is needed for the local workflow.
+
+### Clone and launch
+
+The repository is private. The owner must grant your GitHub account access first. Sign in using Git Credential Manager when prompted; do not share credentials or tokens.
+
+```powershell
+git clone https://github.com/mohamedyassineabdi/Dalila_Language.git
+cd Dalila_Language
 powershell -ExecutionPolicy Bypass -File .\run.ps1
 ```
 
-Open <http://127.0.0.1:7860>. No API keys are needed. Setup installs dependencies from the internet and runs automated tests. Choose Tunisian Arabic manually for a reliable demo of the language selector, or use Auto to see experimental language identification. Try `n7eb 750 m² moch 2000 fi Sfax`. The interface reports the original query, extracted spans, proposed intent, code-switch candidate and a safe localized confirmation. It does NOT know AFI facts. For speech, record or upload an audio clip, transcribe, review/edit the result, then analyze. The default speech model downloads when selected; model access and network are required on first run. Unknown or other languages use multilingual Whisper small. Select `tn-whisperx` explicitly for experimental comparisons; a fallback is marked, never scored as the requested model in evaluation.
+The launcher creates the Python 3.11 virtual environment if absent, installs core dependencies and runs initial tests. It checks/starts Ollama if installed, prepares Qwen3 4B if needed, installs the Piper and offline fallback speech engines, and starts the local web server. Model weights download during initial preparation or first use. Downloads may involve several GB. The terminal must remain open.
 
-## 2. One-command public speech benchmark
+Open **http://127.0.0.1:7860** in your browser. Refresh with Ctrl+F5 after updates. Check the version and model readiness in the header.
 
-Read `reports/MODEL_AND_DATA_REVIEW.md` first. If you are authorized to use the published LinTO corpus and the listed models for research:
+### Enable the experimental Tunisian neural voice
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\run_benchmarks.ps1 -AcceptPublicTerms
-```
-
-This installs evaluation dependencies, verifies available model metadata, prepares pinned model snapshots, attempts to stream 60 published test clips and benchmarks three candidates without fallback. `-IncludeLarge` adds turbo and the code-switch checkpoint (conversion requires additional dependencies, memory and disk). `-Cuda` requests GPU execution; CUDA/cuDNN compatibility must be checked. The default CPU path is closest to the target 8 vCPU/16 GB server. The pipeline was authored and unit-tested in parts, but model downloads/dataset ingestion and Windows execution could not run in this environment. Inspect `reports/prepared_models.json` and `reports/public_asr.json` for errors, coverage and results; no successful score is implied by script completion. The public corpus may overlap model training data and is not a blind comparison. Model licenses, upstream licenses, and individual audio source terms need review before institutional use.
-
-## 3. Kaggle alternative
-
-The included `Kaggle_ASR_Benchmark.ipynb` automates installation, downloads, evaluation and export. Upload the **sanitized Advanced ZIP** as a private dataset, attach it to a new notebook, import the notebook, enable internet, read the review document, and set `ACCEPT_PUBLIC_TERMS=True` only if authorized. Run all cells. CPU is the default; optional GPU/large model experiments may require runtime adjustments and substantial disk/RAM. Download `dalila_benchmark_reports.zip` from the output. Do not upload the original archive, API keys, AFI data or identifiable recordings. The notebook itself has not been run on Kaggle.
-
-## 4. Optional local LLM and original chatbot
-
-Install Ollama on the same Windows host and run `ollama pull qwen3:4b`. In the browser choose `ollama` under understanding backend. It uses a fixed loopback JSON classification endpoint, with a strict response schema and local fallback. The model can propose a dialect and intent; it cannot provide an AFI answer. For a larger comparison use `OLLAMA_MODEL=qwen3:8b` in `.env`. To compare a local model against text baselines:
+For **noncommercial research only**, after reviewing the [OmniVoice model terms](https://huggingface.co/k2-fsa/OmniVoice), stop the server with Ctrl+C and launch:
 
 ```powershell
-.\.venv\Scripts\python.exe evaluate.py --backend ollama --out reports/ollama_text.json
+powershell -ExecutionPolicy Bypass -File .\run.ps1 -TunisianResearchVoice
 ```
 
-The optional Gemini and Groq adapters are disabled by default. Copy `.env.example` to `.env` only if you need configuration. `DALILA_ALLOW_CLOUD=1` plus explicit provider selection is required to send text and the last six user messages to the provider. Use only authorized, nonrestricted data. Use an exact provider model ID and your own key; no assumed free quota or automatic external fallback. No real provider call was tested. In Docker, the fixed Ollama loopback URL requires Ollama to share the same network namespace; use the Windows host version for this feature.
+This creates an isolated `.venv-tunisian` environment, installs the research runtime and prepares the pinned model (~3.27 GB for model files, plus runtime dependencies). The local opt-in marker persists across launches. It does not clone anyone's voice and does not transmit user speech/text to a hosted TTS API.
 
-The recovered full conversational Gradio playground lives in `legacy/original/`. Its original Python code is retained; one stale mocked test fixture was corrected. It is separate from the new API, can be run independently using its own README/setup, and can generate open-ended answers that are **not grounded in AFI sources**. Do not use legacy cloud options for confidential data. Credentials and original venv were deliberately excluded.
+The interface shows `Tunisian voice: preparing`, then `ready` if initialization succeeds. Wait for readiness before evaluating the specialized voice. If unavailable or timed out, the app retains the generic Arabic neural/offline fallback and reports a diagnostic reason. The first uncached utterance may still be slow.
 
-## 5. Optional Tunisian TTS
-
-Generic eSpeak NG is only a functional speech baseline. Install it and add it to PATH. French/English/German/Turkish WAV creation succeeded in Linux; the installed Linux eSpeak did not provide Arabic. Even if an Arabic generic voice works elsewhere, it is not native Derja. For research-only SILMA or XTTS, after license review:
+For ordinary subsequent launches:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\setup-voice.ps1
+powershell -ExecutionPolicy Bypass -File .\run.ps1
 ```
 
-Set `DALILA_ENABLE_RESEARCH_TTS=1` in `.env`, restart the app, upload a PCM WAV reference of 2–30 seconds that you own or have permission to use, enter the verbatim reference transcript for SILMA, and provide Arabic-script speech text. The voice worker is the recovered original. Heavy TTS inference is untested here; there is no default voice clone, no automatic reference upload and no guaranteed pronunciation. SILMA is CC BY-NC 4.0, so do not assume commercial rights. XTTS and upstream F5/Coqui licenses need review. Reference audio stays in request-scoped temporary files; model packages may cache downloaded resources. UI/HTTP logs do not intentionally store transcripts. The optional legacy app has its own output/log behavior.
+Disable the research model and return to lighter speech generation:
 
-## 6. Evaluation and model selection
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run.ps1 -DisableTunisianResearchVoice
+```
 
-- `evaluate.py` runs baseline word/character and hybrid classifiers on 72 prior exploratory eval drafts. `--text data/stress_cases.jsonl` uses 80 new authored stress drafts. All 224 text cases (72 development, 152 exploratory evaluation) are synthetic and unreviewed. The hybrid was designed with known language patterns, so scores are not independent generalization evidence. Auto detection explicitly abstains; distinguish coverage, best-guess accuracy and operational accuracy counting abstentions as incorrect. The stress data is authored by the same AI, not independent.
-- `data/recording_kit.csv` and `data/tts_rating_kit.csv` provide 80 prompts and blank consent/transcript/rating fields. Elicit naturally spoken recordings from consenting humans; have fluent reviewers write and verify references. Split by speaker and keep final eval untouched. `audio_manifest_example.json` is a schema example, not actual recording evidence. `data/audio_manifest.jsonl` is intentionally empty.
-- `evaluate.py --audio data/audio_manifest.jsonl --models tn-small tn-whisperx small --out reports/consented_asr.json` requires verified consented audio. Public corpus comparison requires explicit `--public` and published-source metadata. Failure cases count as empty hypotheses; compare coverage and WER/CER together. Exact-string numeric checks skip examples without numeric digits; they do not validate spoken number meaning. Entity and negation tests require explicit reference annotations; public samples generally lack them. WER/CER are strict Unicode/whitespace-normalized scores, not the model authors' custom scorer. Memory is sampled RSS, not peak whole-system memory. Human semantic and voice judgments remain necessary.
-- `evaluate_numalia.py --download-for-review` downloads a candidate dialect classifier for audit only. Its architecture requires custom Python code. Inspect it in isolation, pin its revision, review its CC BY-SA 4.0 terms, then explicitly use `--reviewed-local-path models/numalia --i-reviewed-code` with the optional Transformers dependencies. Never execute unreviewed remote code. NUMALIA covers only five of our eight target languages; it needs a multilingual router for English, German and Turkish. The model is not yet integrated as default.
+This removes the opt-in marker, not the downloaded model files.
 
-## 7. API and deployment
+## 2. How to use Dalila
 
-`GET /health`, `POST /analyze` (legacy Phase 1), `POST /understand` (advanced), `POST /transcribe`, `POST /speak`, `POST /speak-reference`. Example body for `/understand`: `{"text":"n7eb 750 m² moch 2000 fi Sfax","language":"aeb","backend":"baseline","history":[],"style":"auto"}`. Results include original text, normalized text, span offsets, tentative intent, fallback and language/knowledge status. `aeb, ar, fr, en, arq, ayl, de, tr` language codes. Optional contextual inference only for short conjunction-prefixed follow-ups or via the LLM; all inherited intent is a proposal. No token-level dialect labels, automatic transliteration, reliable number-word conversion, or validated named-entity catalogue. Do not treat the heuristic place aliases as official zones. Keep factual retrieval/answer generation separate and require validated evidence before rendering substantive responses. `http://127.0.0.1:7860/docs` exposes interactive local API documentation.
+1. Type a message and press **Send** (or Enter). Shift+Enter inserts a newline.
+2. For voice input, click the microphone, allow access, speak naturally, then click again to stop. Dalila transcribes and submits automatically. A voice reply is attempted automatically.
+3. For a typed message, click **Read reply** to hear the response. Use the player controls if autoplay is blocked.
+4. Use **New chat** to clear the conversation. Advanced / research tools contains optional language/model overrides, audio upload and technical diagnostics. Leave these on automatic for ordinary use.
 
-Docker: `docker build -t dalila-language-lab .` then `docker run --rm -p 127.0.0.1:7860:7860 -v dalila-hf:/home/dalila/.cache/huggingface dalila-language-lab`. Docker and Windows builds not tested. The server is not hardened for public exposure; no authentication or abuse controls. Start with one loaded ASR and one request at a time, four threads, CPU int8, one quantized LLM at a time; benchmark actual memory/latency on the 16 GB target before deployment. Model weights not included. For offline operation use prepared models and `ASR_OFFLINE=1`. Keep `.env`, private audio and reports containing transcripts outside version control.
+Try these inputs:
 
-## 8. Evidence and current decision
+| Language | Example |
+|---|---|
+| Tunisian Arabic | عسلامة! لاباس؟ |
+| Tunisian Arabizi | ahla bik |
+| Tunisian project request | نحب نحل مشروع صغير، تنجم تعاوني؟ |
+| Mixed Tunisian/French | تنجم تبعثلي le dossier par email؟ |
+| French | Bonjour, comment allez-vous ? |
+| English | Hello, can you understand me? |
+| Standard Arabic | مرحباً، هل تفهم العربية؟ |
+| Algerian Arabic | واش راك؟ تقدر تعاونّي؟ |
+| Libyan Arabic | شن حالك؟ |
+| German | Hallo, wie geht es dir? |
+| Turkish | Merhaba, nasılsın? |
 
-Read `reports/IMPLEMENTATION_STATUS.md`, `reports/MODEL_AND_DATA_REVIEW.md`, `reports/advanced_text.json`, `reports/stress_text.json`, `reports/tests_advanced.txt`, `reports/legacy_retest.txt`, `reports/tts_advanced.json`, `reports/environment.json`. Phase 1 reports remain historical. The direct runtime network could not resolve Hugging Face, PyPI or Zenodo; no fresh neural inference was executed. **GO for research/demo setup; NO-GO for production or a claim of validated eight-language voice support.**
+These are demo prompts, not guaranteed model outputs. The model can misunderstand dialects and code-switching. The interface displays the detected language, actual response backend and elapsed time. A guided reply or baseline is not LLM generation. Administrative questions receive cautious clarifications because AFI retrieval is not connected.
 
+## 3. Update after the first installation
 
-## v0.4.0 — simple chat
-Stop the old server, run `git pull --ff-only`, then `powershell -ExecutionPolicy Bypass -File .\\run.ps1`. The launcher discovers an installed Ollama model or downloads Qwen3 4B once if Ollama is installed and a compatible model is absent. A several-GB download may occur. No cloud provider is automatically selected. The browser displays the actual model and fallback state. Voice messages are automatically sent and read when a compatible offline voice is available. Windows SAPI/eSpeak and local browser voices are generic, not native Tunisian TTS. No AFI factual responses are enabled. Real neural inference, Windows voices and microphone hardware require local validation.
+Stop the existing server (Ctrl+C). In the original cloned folder on `main`:
 
+```powershell
+git pull --ff-only
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-## v0.5.0 — latency-focused local chat
-The launcher defaults to a one-time Qwen3 4B download when only Qwen3 8B is installed (the 8B is retained; choose it via OLLAMA_MODEL if quality requires it). This is a performance hypothesis, not a measured quality comparison. Chat uses compact prompts, two recent context turns, shorter generation and 20-minute keep-alive. The interactive ASR launcher uses greedy decoding; standalone benchmarks retain their default beam setting. ASR caches two checkpoints, and Tunisian refinement runs only when the initial transcript has low mean log probability or no score; set ASR_REFINE_TUNISIAN=always to restore full refinement. This heuristic may miss recognition errors and needs real speech evaluation. The browser prioritizes compatible offline voices and does not wait for voice playback before accepting the next turn. Chat bubbles show measured wall time; advanced diagnostics show stage timings. Cloud stays off by default. Actual latency and dialect quality depend on local hardware and model weights.
+If you previously tested the experimental latency branch, commit or safely stash your own edits first, then `git switch main` and pull. Never force-reset teammates' work. The launcher reuses the existing environments and cached models. Do not delete and reinstall everything for routine updates.
 
+## 4. Architecture and model routing
 
-## v0.6.0 — offline speech coverage
-The existing Windows launcher installs the pinned espeakng-loader package into the virtual environment once (approximately 10 MB). No voice installation, admin rights, API key or cloud TTS is required. The browser still prefers matching local voices, but automatically falls back to the server package on missing voice or playback error. Arabic dialects use the generic Arabic voice, not native dialect synthesis. Unvowelled Arabic pronunciation and code switching remain limitations. Eight real audio smoke tests verify WAV output, not native-speaker quality. If autoplay is blocked, the generated audio remains available via player controls. All speech stays local. The packaged synthesizer is eSpeak NG (GPL); review redistribution terms before commercial distribution.
+```mermaid
+flowchart TD
+    A[Text or microphone] --> B{Voice input?}
+    B -->|Yes| C[Whisper Base INT8]
+    C --> D{Recognition confidence and dialect}
+    D -->|Refine when indicated| E[Whisper Small or Tunisian Small]
+    D -->|Accept| F[Language and intent analysis]
+    E --> F
+    B -->|No| F
+    F --> G{Response route}
+    G -->|Greeting or guided request| H[Controlled local response]
+    G -->|Administrative request without AFI data| H
+    G -->|Ordinary conversation| I[Ollama Qwen3]
+    I --> H2[Localized reply]
+    H --> H2
+    H2 --> J{Speech requested}
+    J -->|Tunisian research voice ready| K[OmniVoice aeb]
+    J -->|Other languages or fallback| L[Piper or compatible local voice]
+    K --> M[Audio player]
+    L --> M
+```
 
+| Layer | Technology | Purpose |
+|---|---|---|
+| Web interface | HTML/CSS/JS + browser MediaRecorder | Simple chat, microphone and playback |
+| API | FastAPI, Uvicorn | Local HTTP service |
+| General speech recognition | Faster-Whisper Base, CPU INT8 | Fast multilingual first pass |
+| Recognition escalation | Whisper Small / TheBiggyBang Tunisian Small CT2 | Uncertain or Tunisian input |
+| Experimental recognition challengers | whisperX-tunisian, turbo, large-v3, converted Tunisian code-switch checkpoint | Research comparisons, not automatic production defaults |
+| Language/intent analysis | Hybrid word/character classifiers and lexical patterns | Dialect proposals, intent, mentions, numbers, negation |
+| Conversational LLM | Ollama Qwen3 4B preferred; supported local models discovered | Short contextual replies; 8B optional |
+| General neural TTS | Piper | Arabic (Jordanian Kareem), French (Siwis), English (Lessac), German (Thorsten), Turkish (DFKI) |
+| Tunisian neural TTS (opt-in) | k2-fsa/OmniVoice, language `aeb` | Dialect-targeted synthetic speech |
+| Speech fallback | Packaged eSpeak NG, Windows SAPI, compatible browser voices | Maintain sound coverage when neural TTS unavailable |
 
-## v0.7.0 — faster ASR and experimental neural TTS
-Windows launcher installs optional Piper 1.4.1, selects Whisper base as the fast general ASR, and prepares public pinned neural voice checkpoints asynchronously at startup. The first preparation downloads models; chat is available during preparation with fallback. The base model uses confidence heuristics to escalate to small or Tunisian small. Set DALILA_GENERAL_ASR=small to restore the older path. This is not a validated accuracy/speed benchmark. Piper voices use Jordanian Arabic, French, English, German and Turkish; dialects share the Arabic model, not native Tunisian pronunciation. eSpeak/browser voices remain fallbacks. No speech or conversation is sent to model hosts. Voice weights are from rhasspy/piper-voices, pinned revision listed in dalila/neural_voice.py. Individual voice licenses require review before deployment; this remains a research prototype. Neural inference needs real-device validation; tests use mocked neural routing plus actual eSpeak fallback generation.
+The automatic speech-recognition confidence heuristic is experimental and can miss errors. The selected general and specialist models can both run for a single utterance, increasing latency. Qwen3 is configured for short output and kept warm between calls. The Tunisian worker uses four generation steps, a 45-second synthesis timeout and an ephemeral exact-reply audio cache. If the worker times out, restart the app to retry uncached synthesis. Non-Tunisian language routing is unchanged.
 
+### Language codes
 
-## v0.8.0 — Tunisian research voice
-For noncommercial research only, use `powershell -ExecutionPolicy Bypass -File .\\run.ps1 -TunisianResearchVoice`. This opts into the CC BY-NC OmniVoice weights (https://huggingface.co/k2-fsa/OmniVoice), installed in an isolated environment. Model files (~3.27 GB) download on preparation; additional runtime downloads required. The local worker explicitly uses the Tunisian language code aeb, CPU float32, 16 diffusion steps, no real speaker reference. Once enabled, ordinary launches remember the opt-in via an ignored marker. Disable with `-DisableTunisianResearchVoice`. No user text is sent to a hosted TTS API. The fallback remains Piper Arabic or offline speech. A 25-second per-reply worker timeout prevents indefinite blocking; a failed worker falls back until restart. Actual pronunciation and CPU latency are not yet validated. Listen to the sample prompts before any deployment; the noncommercial weights must not be deployed commercially without permission. Existing ASR and other languages are unchanged.
+`aeb` Tunisian Arabic (including Arabizi), `ar` Modern Standard Arabic, `arq` Algerian Arabic, `ayl` Libyan Arabic, `fr` French, `en` English, `de` German, `tr` Turkish. Automatic recognition does not guarantee correct country-level Arabic dialect identification. Algerian and Libyan spoken output currently falls back to generic Arabic voices.
 
+## 5. Optional settings
 
-### v0.8.1 — research voice latency repair
-The 16-step OmniVoice CPU evaluation generated 7/7 clips, taking 45–61 seconds each on the Linux CI runner. The old 25-second timeout could terminate a healthy worker. The new experimental default uses 4 steps, a 45-second bounded timeout, a small in-memory exact-reply audio cache (cleared at restart), and lower Windows worker priority. This may trade off pronunciation or audio quality; 4-step audio requires separate listening evaluation. Set DALILA_TUNISIAN_STEPS=16 and DALILA_TUNISIAN_TIMEOUT=120 for quality-first experimentation. Readiness includes safe failure classes; a timed-out worker stops and can be restarted with the normal launcher. Automatic chat no longer probes Ollama for guided greetings or sends clearly administrative requests through a second model when verified AFI data is absent. The explicit research opt-in is preserved; no cloud speech provider is enabled.
+No `.env` file is required for normal use. To customize the local setup, copy the example if needed:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Do not overwrite an existing configuration. Keep it local. Supported options include:
+
+| Setting | Normal launcher default / usage |
+|---|---|
+| `OLLAMA_MODEL` | `qwen3:4b`; use `qwen3:8b` if installed and resources permit |
+| `DALILA_GENERAL_ASR` | `base` on Windows; set `small` for quality-first comparison |
+| `ASR_DEVICE`, `ASR_COMPUTE_TYPE`, `ASR_THREADS` | Launcher sets CPU, int8, 4 threads |
+| `ASR_BEAM_SIZE` | Launcher defaults to 1 (greedy decoding) |
+| `ASR_REFINE_TUNISIAN` | `low_confidence` or `always` for the Small general path |
+| `ASR_OFFLINE` | `1` restricts ASR to available cached/local model files |
+| `DALILA_TUNISIAN_STEPS` | 4; 16 is quality-first research and much slower |
+| `DALILA_TUNISIAN_TIMEOUT` | 45 s; supported range 15–120 s |
+| `DALILA_ALLOW_CLOUD` | 0; cloud semantic classification is disabled by default |
+
+For variables where the launcher sets a default if missing, set them in the current PowerShell session **before** launching (rather than relying on `.env` to override the launcher). For example:
+
+```powershell
+$env:DALILA_GENERAL_ASR = 'small'
+$env:DALILA_TUNISIAN_STEPS = '16'
+$env:DALILA_TUNISIAN_TIMEOUT = '120'
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
+
+This is an optional slow, quality-first experiment, not the recommended live demo. Remove those session variables or open a new terminal to restore defaults. Explicit `gemini` and `groq` semantic adapters exist for authorized experiments, but need your own provider key/model and `DALILA_ALLOW_CLOUD=1`. They are not automatic conversational fallbacks; do not send restricted information to them.
+
+## 6. Troubleshooting
+
+| Symptom | What to do |
+|---|---|
+| Python launcher not found | Install 64-bit Python 3.11 with the launcher, reopen PowerShell |
+| Git clone denied | Confirm the repository owner granted your GitHub account access |
+| No local LLM / baseline only | Install/start Ollama; check `ollama list`; run `ollama pull qwen3:4b` if needed; restart Dalila |
+| Page does not load | Check terminal for errors; open http://127.0.0.1:7860; stop any old instance using port 7860 |
+| Slow first message | Check ASR/model readiness; initial downloads and model loading are expected |
+| Mic not working | Allow microphone access on localhost in your browser; use the optional upload field to isolate mic issues |
+| Wrong dialect | Try a longer natural sentence; use the manual language selector to diagnose |
+| Voice silent | Click Read reply and the audio player's play button; inspect status; confirm voice engine dependencies |
+| Tunisian voice unavailable | Confirm opt-in, inspect the header reason and PowerShell output; restart after resolving installation/network errors |
+| `SynthesisTimeout` | CPU could not finish within the bound; restart, retain four steps or disable the heavy research voice |
+| Arabic voice sounds non-Tunisian | Verify OmniVoice readiness and that playback reports OmniVoice, not Arabic fallback |
+| Memory pressure | Close competing workloads; disable the experimental Tunisian model; prefer Qwen3 4B |
+| Stale interface after git pull | Stop and restart server; Ctrl+F5 |
+
+For diagnostics, run these with Dalila running in another terminal:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:7860/health
+Invoke-RestMethod http://127.0.0.1:7860/capabilities | ConvertTo-Json -Depth 5
+ollama list
+```
+
+Share the error class or terminal traceback with the team, not API keys, private recordings, or private transcripts. If an existing research environment is broken, stop Dalila and rename only that environment before reinstalling:
+
+```powershell
+Rename-Item .venv-tunisian .venv-tunisian-backup
+powershell -ExecutionPolicy Bypass -File .\run.ps1 -TunisianResearchVoice
+```
+
+Only use this if the folder exists and the backup name is unused. It preserves the old environment and normal chatbot. Cached model downloads are typically stored outside the project by Hugging Face.
+
+## 7. Verification and evaluation
+
+Latest verified release evidence (26 November 2026):
+
+| Check | Result |
+|---|---|
+| Windows Python 3.11 regression suite | 82 passed |
+| Linux Python 3.11 regression suite | 82 passed |
+| Actual packaged offline speech | WAV smoke tests for eight language codes |
+| Actual Piper neural audio | Five language voices generated on Windows CI |
+| Actual OmniVoice audio | Seven Tunisian phrases synthesized on Linux CPU |
+
+See [regression run](https://github.com/mohamedyassineabdi/Dalila_Language/actions/runs/45900749337), [Piper run](https://github.com/mohamedyassineabdi/Dalila_Language/actions/runs/45851892671), [4-step OmniVoice run](https://github.com/mohamedyassineabdi/Dalila_Language/actions/runs/45900749305), [16-step OmniVoice run](https://github.com/mohamedyassineabdi/Dalila_Language/actions/runs/45862449243) and [benchmark summary](reports/RELEASE_0.8.1.md).
+
+The 4-step evaluation generated short 2.98–4.61 s audio samples in 8.902–11.709 s on CI, compared with 45.011–60.643 s at 16 steps. These are synthesis timings, not total end-to-end response latency. CI does not establish your PC's performance, native pronunciation, or real microphone accuracy. The Windows regression suite tests routing; the full OmniVoice neural model evaluation used Linux, not Windows. The four-step voice must still pass native-speaker listening tests.
+
+Run the core suite on your machine:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+For optional real Tunisian audio evaluation, once the research environment is installed and its license accepted:
+
+```powershell
+$env:DALILA_TUNISIAN_RESEARCH = '1'
+$env:DALILA_TUNISIAN_STEPS = '4'
+.\.venv-tunisian\Scripts\python.exe tunisian_voice_eval.py
+```
+
+Outputs: `outputs/tunisian_voice_eval/` (seven WAVs and a JSON report). Stop the web server before running heavy benchmarks. Use native-speaker pronunciation/naturalness ratings; generated WAV validity alone is not a quality score.
+
+Other research tooling:
+- `evaluate.py` and `benchmark.py`: text/ASR experiments. The 224 text examples are synthetic unreviewed drafts (72 development, 152 exploratory evaluation).
+- `data/recording_kit.csv`, `data/tts_rating_kit.csv`: consented human evaluation templates; `data/audio_manifest.jsonl` intentionally empty.
+- `run_benchmarks.ps1 -AcceptPublicTerms`: optional public corpus ASR comparison after reviewing [model and data terms](reports/MODEL_AND_DATA_REVIEW.md). Defaults to 60 clips. `-IncludeLarge` and `-Cuda` are experimental. Review failures, coverage and overlap with training data before interpreting WER/CER.
+- `Kaggle_ASR_Benchmark.ipynb`: optional remote evaluation workflow; not a prerequisite for the chatbot. Do not upload private code/data without authorization.
+- `verify_models.py`, `prepare_models.py`, `evaluate_numalia.py`: experimental metadata, checkpoint preparation and classifier review. See [historical research guide](docs/RESEARCH_HISTORY.md) for details and cautions.
+
+## 8. Project structure
+
+```text
+Dalila_Language/
+├── app.py                       # FastAPI entry point
+├── run.ps1                      # Main Windows launcher
+├── setup.ps1                    # Initial environment + tests
+├── requirements*.txt            # Core and optional dependencies
+├── .env.example                 # Configuration template, no secrets
+├── static/index.html             # Chat interface
+├── dalila/
+│   ├── chat.py                  # Conversational routing
+│   ├── core.py / semantic.py     # Language and intent analysis
+│   ├── llm.py                   # Ollama and optional semantic adapters
+│   ├── engines.py               # ASR and TTS routing
+│   ├── neural_voice.py          # Piper adapter
+│   ├── tunisian_voice.py        # Research worker controller
+│   ├── tunisian_worker.py       # Local OmniVoice inference
+│   └── tts_worker.py            # Packaged fallback synthesizer
+├── data/                        # Draft datasets and evaluation templates
+├── tests/                       # Regression and offline audio tests
+├── reports/                     # Research results and release evidence
+├── docs/                        # Historical research guide
+├── legacy/                      # Archived original prototype, not main app
+└── .github/workflows/            # CI and neural model evaluations
+```
+
+## 9. API and integration
+
+Local interactive OpenAPI: http://127.0.0.1:7860/docs
+
+| Method and endpoint | Purpose |
+|---|---|
+| GET /health | Service health and knowledge status |
+| GET /capabilities | Actual configuration and model readiness |
+| POST /chat | Text conversation |
+| POST /understand | Structured understanding and intent |
+| POST /analyze | Older baseline analysis API |
+| POST /transcribe | Multipart audio file transcription |
+| POST /voice-chat | Combined ASR and chat (without synthesis) |
+| POST /speak | Local audio synthesis, WAV encoded as base64 |
+| POST /speak-reference | Separate opt-in reference voice research, consent required |
+
+Example JSON body for `POST /chat`:
+
+```json
+{"text":"ahla bik","language":"auto","backend":"auto","history":[],"style":"auto"}
+```
+
+The response includes assistant text, speech text, language, actual backend, timing, fallback reason and technical analysis. Preserve original messages and extracted values when integrating the separate AFI data system. No AFI fact should be returned until verified retrieval and grounding are connected.
+
+Linux developers can create a Python 3.11 venv, install `requirements.txt` and optionally `requirements-neural-tts.txt`, then run `python -m uvicorn app:app --host 127.0.0.1 --port 7860`. Set `DALILA_PREPARE_MODELS=1` before launching to prepare models. Local Ollama must be available separately. Linux CI is verified; the full manual Linux setup is not independently end-to-end validated. The Dockerfile supports a basic isolated API, but full Docker deployment, host Ollama networking and optional neural worker setup are not validated. Prefer the Windows launcher for teammate demos.
+
+## 10. Privacy, licenses and limitations
+
+- This is a **research/demo release**, not production-ready. No verified AFI database is connected. Do not expose the development server publicly; it has no production authentication or abuse controls.
+- The normal workflow is local inference. Downloads of public weights contact their hosts; no default external inference is configured. Temporary uploaded audio is removed by the API. Exact-reply audio cache is memory-only and cleared on restart. Use authorized recordings for evaluation.
+- OmniVoice weights are CC BY-NC (noncommercial research only); do not assume authorization for institutional/production use. Review each model/voice's upstream and weight licenses, including Piper voices and eSpeak NG redistribution terms. Optional SILMA/XTTS reference experiments require separate setup, license review and explicit voice consent; they are not active by default. See [historical guide](docs/RESEARCH_HISTORY.md).
+- Never commit `.env`, API keys, virtual environments, model weights, personal audio, or private evaluation transcripts. The repository ignores common local artifacts. No source-code license has been declared; do not assume redistribution rights.
+- The current ASR accuracy, native Tunisian naturalness, code-switching accuracy and whole-system latency are still experimental. Use the existing fallbacks during demonstrations if needed.
+
+## 11. Team workflow
+
+Work from the shared `main` branch. Use feature branches and pull requests for changes, and run the regression suite before merging. Share improvements, diagnostic results and reproducible benchmark reports, not secrets or private speech data. The Dalila language module remains independent from the AFI data and Marchés Publics repositories.
+
+**Release status: GO for local team research and hackathon demonstration; NO-GO for unattended production deployment.**

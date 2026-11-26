@@ -11,3 +11,7 @@ outputs
 data/public_linto
 data/recordings
 legacy/original/.env
+.venv-tunisian
+.venv-tunisian-*
+.env.*
+!.env.example

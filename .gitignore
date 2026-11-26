@@ -27,3 +27,6 @@ outputs/
 *.bin
 
 .venv-tunisian/
+.venv-tunisian-*/
+reports/prepared_models.json
+reports/ollama_text.json
