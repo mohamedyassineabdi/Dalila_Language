@@ -1,7 +1,7 @@
 import os,time,subprocess,shutil,threading,sys,importlib.util,wave
 from functools import lru_cache
 from pathlib import Path
-ASR={'tn-small':'TheBiggyBang/whisper-small-tunisian-derja-ct2','tn-whisperx':'montachouig/whisperX-tunisian','small':'small','turbo':'turbo','large-v3':'large-v3','tn-codeswitch':'oddadmix/Whisperv3-tunisian-codeswitch'}
+ASR={'base':'base','tn-small':'TheBiggyBang/whisper-small-tunisian-derja-ct2','tn-whisperx':'montachouig/whisperX-tunisian','small':'small','turbo':'turbo','large-v3':'large-v3','tn-codeswitch':'oddadmix/Whisperv3-tunisian-codeswitch'}
 LOCK=threading.RLock()
 @lru_cache(maxsize=2)
 def model(key):
@@ -31,20 +31,36 @@ def transcribe(path,key='tn-small',language='auto'):
     if not text: raise ValueError('No speech recognized')
     return dict(text=text,model=key,avg_logprob=mean_logprob,asr_language=info.language,language_probability=info.language_probability,duration_s=len(audio)/16000,load_s=load,inference_s=elapsed,rtf=elapsed/(len(audio)/16000))
 
+def general_asr_key():
+    value=os.getenv('DALILA_GENERAL_ASR','small')
+    return value if value in ('base','small') else 'small'
+
+def warm_asr():
+    with LOCK:
+        model(general_asr_key())
+
 def route_asr(path,language='auto',key=None):
+    general_key=general_asr_key()
     # Detect general language before considering a dialect-specific model.
     if key or language != 'auto':
-        primary = key or ('tn-small' if language=='aeb' else 'small')
+        primary = key or ('tn-small' if language=='aeb' else general_key)
         try:
             return dict(transcribe(path,primary,language),fallback=False)
         except Exception as first:
             if primary=='small': raise
             return dict(transcribe(path,'small',language),fallback=True,failed_model=primary,reason=type(first).__name__)
     try:
-        general = transcribe(path,'small','auto')
+        general = transcribe(path,general_key,'auto')
     except Exception as first:
-        return dict(transcribe(path,'tn-small','aeb'),fallback=True,failed_model='small',reason=type(first).__name__)
+        if general_key!='small':
+            return dict(transcribe(path,'small','auto'),fallback=True,failed_model=general_key,reason=type(first).__name__)
+        raise
     if general.get('asr_language') != 'ar':
+        if general_key=='base' and (general.get('avg_logprob') is None or general['avg_logprob'] < -0.65 or general.get('language_probability',0)<0.6):
+            try:
+                return dict(transcribe(path,'small','auto'),fallback=False,initial_model='base',initial_text=general['text'])
+            except Exception as exc:
+                return dict(general,fallback=True,failed_model='small',reason=type(exc).__name__)
         return dict(general,fallback=False)
     from .semantic import detect
     detected = detect(general['text'])
@@ -53,12 +69,15 @@ def route_asr(path,language='auto',key=None):
         return dict(general,fallback=False)
     # Avoid a second complete decode for clear transcripts in the interactive path.
     # The confidence heuristic is not calibrated; full refinement is configurable.
-    if detected['best_guess']=='aeb' and (os.getenv('ASR_REFINE_TUNISIAN','low_confidence')=='always' or general.get('avg_logprob') is None or general['avg_logprob'] < -0.65):
+    if detected['best_guess']=='aeb' and (general_key=='base' or os.getenv('ASR_REFINE_TUNISIAN','low_confidence')=='always' or general.get('avg_logprob') is None or general['avg_logprob'] < -0.65):
         try:
             refined = transcribe(path,'tn-small','aeb')
-            return dict(refined,fallback=False,initial_model='small',initial_text=general['text'],language_hint='aeb')
+            return dict(refined,fallback=False,initial_model=general_key,initial_text=general['text'],language_hint='aeb')
         except Exception as exc:
             return dict(general,fallback=True,failed_model='tn-small',reason=type(exc).__name__)
+    if general_key=='base' and (general.get('avg_logprob') is None or general['avg_logprob'] < -0.65):
+        try: return dict(transcribe(path,'small','auto'),fallback=False,initial_model='base',initial_text=general['text'])
+        except Exception as exc: return dict(general,fallback=True,failed_model='small',reason=type(exc).__name__)
     return dict(general,fallback=False)
 
 def _windows_speech(text, voice, output):
@@ -109,6 +128,13 @@ def speak(text,language,output):
     if not text.strip() or len(text)>1200: raise ValueError('Speech text must be 1–1200 characters')
     voice=VOICE_MAP[language]
     start=time.perf_counter()
+    from .neural_voice import speak_neural
+    try:
+        result=speak_neural(text,voice,output)
+        if not _valid_wave(output): raise RuntimeError('Invalid neural audio')
+        return dict(result,requested_language=language,generation_s=time.perf_counter()-start)
+    except Exception:
+        Path(output).unlink(missing_ok=True)
     # No OS voice installation needed for the packaged fallback.
     attempts=[]
     if packaged_voice_available():

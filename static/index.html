@@ -76,7 +76,7 @@
             </div>
             <div class="row">
               <label>ASR model</label>
-              <select id="asrModel"><option value="auto">Automatic</option><option value="tn-small">tn-small</option><option value="tn-whisperx">tn-whisperx</option><option value="small">small</option><option value="turbo">turbo</option><option value="large-v3">large-v3</option><option value="tn-codeswitch">tn-codeswitch</option></select>
+              <select id="asrModel"><option value="auto">Automatic</option><option value="tn-small">tn-small</option><option value="tn-whisperx">tn-whisperx</option><option value="base">base (fast)</option><option value="small">small</option><option value="turbo">turbo</option><option value="large-v3">large-v3</option><option value="tn-codeswitch">tn-codeswitch</option></select>
             </div>
           </div>
           <div class="row">
@@ -96,6 +96,7 @@ const $ = id => document.getElementById(id);
 const chatLog = $('chatLog');
 const audioPlayer = new Audio();
 let playbackId=0;
+let neuralReady={};
 window.speechSynthesis?.getVoices();
 audioPlayer.controls=true; audioPlayer.hidden=true; audioPlayer.style.maxWidth='100%';
 $('statusLine').parentElement.after(audioPlayer);
@@ -131,8 +132,9 @@ async function api(path, body, form=false){
 async function loadCapabilities(){
   try{
     const c = await fetch('/capabilities').then(r=>r.json());
-    $('modeLine').textContent = `v${c.version || '0.6.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. ${c.packaged_tts ? 'Multilingual offline voice package installed.' : 'Offline voices not yet confirmed.'}`;
-    $('backend').value = 'auto';
+    neuralReady=c.neural_tts || {};
+    $('modeLine').textContent = `v${c.version || '0.7.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. ASR: ${c.general_asr} (${c.asr_warmup}) · Neural voices: ${Object.values(neuralReady).filter(x=>x==='ready').length}/5 ready.`;
+
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
 async function sendText(languageHint=null,voiceTiming=null){
@@ -183,13 +185,14 @@ async function speakLast(reply=lastReply){
       audioPlayer.hidden=false;
       try {
         await audioPlayer.play();
-        if(current()&&!busy)setStatus('Playing '+r.voice+' offline voice · '+((performance.now()-started)/1000).toFixed(1)+' s.');
+        if(current()&&!busy)setStatus('Playing '+r.engine+' / '+r.voice+' · '+((performance.now()-started)/1000).toFixed(1)+' s.');
       } catch(e) {
         if(current())setStatus('Audio ready. Press play if automatic playback is blocked.');
       }
     }catch(e){if(current()&&!busy)setStatus('Offline voice unavailable for '+reply.language+'. See advanced details.',true);}
   }
-  if(local){
+  if(neuralReady[locale?.split('-')[0]]==='ready'){await serverVoice();}
+  else if(local){
     const u=new SpeechSynthesisUtterance(speech);
     u.voice=local;u.lang=local.lang;
     u.onstart=()=>{clearTimeout(timer);if(current()&&!fallbackStarted)setStatus('Playing offline browser voice.');};
@@ -249,6 +252,7 @@ $('micBtn').onclick = async ()=>{
   }catch(e){ setStatus(e.message, true); }
 };
 loadCapabilities();
+setInterval(()=>{if(!busy)loadCapabilities();},15000);
 addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.');
 </script>
 </body>
