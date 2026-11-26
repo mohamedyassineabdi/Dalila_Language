@@ -54,12 +54,12 @@
           <div class="textbox">
             <textarea id="messageBox" dir="auto" placeholder="Type here in Tunisian, Arabic, French, English… or press the mic button."></textarea>
           </div>
-          <button id="micBtn" class="icon-btn" title="Record voice">🎤</button>
+          <button id="micBtn" class="icon-btn" title="Record voice" aria-label="Record voice">🎤</button>
           <button id="sendBtn" class="send-btn">Send</button>
         </div>
         <div style="display:flex;justify-content:space-between;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap">
           <div id="statusLine" class="hint">Ready.</div>
-          <div class="hint">No verified AFI knowledge is connected yet; answers stay conservative by design.</div>
+          <div class="hint">Language demo · verified AFI data not connected.</div>
         </div>
       </div>
       <details>
@@ -101,12 +101,18 @@ let mediaRecorder = null;
 let liveStream = null;
 let pendingChunks = [];
 let recordedBlob = null;
+let busy = false;
+function setBusy(value){busy=value; $('sendBtn').disabled=value; $('newChat').disabled=value; $('micBtn').disabled=value;}
 
 function addBubble(role, text, meta=''){
   const wrap = document.createElement('div');
   const bubble = document.createElement('div');
   bubble.className = `bubble ${role}`;
   bubble.textContent = text;
+  bubble.dir = 'auto';
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.alignItems = role === 'user' ? 'flex-end' : 'flex-start';
   wrap.appendChild(bubble);
   if(meta){const m = document.createElement('div'); m.className='meta'; m.textContent=meta; wrap.appendChild(m);}
   chatLog.appendChild(wrap); chatLog.scrollTop = chatLog.scrollHeight;
@@ -121,35 +127,52 @@ async function api(path, body, form=false){
 async function loadCapabilities(){
   try{
     const c = await fetch('/capabilities').then(r=>r.json());
-    $('modeLine').textContent = `Automatic backend: ${c.semantic_backend}. Voice reply available. Research voice ${c.research_voice_enabled ? 'enabled' : 'disabled'}.`;
+    $('modeLine').textContent = `v${c.version || '0.4.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. Offline speech depends on installed voices.`;
     $('backend').value = 'auto';
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
-async function sendText(){
+async function sendText(languageHint=null){
+  if(busy) return;
   const text = $('messageBox').value.trim();
   if(!text) return;
+  setBusy(true);
   addBubble('user', text);
   $('messageBox').value='';
   setStatus('Thinking…');
   try{
-    const r = await api('/chat', {text, language:$('lang').value, backend:$('backend').value, history});
+    const r = await api('/chat', {text, language:$('lang').value==='auto' && languageHint ? languageHint : $('lang').value, backend:$('backend').value, history});
     history = [...history, text].slice(-6);
     lastReply = r;
-    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.intent?.label ? ' · intent: '+r.intent.label : ''}`;
+    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.model ? ' · '+r.model : ''}`;
     addBubble('assistant', r.assistant_text || 'No answer produced.', meta);
     $('debugPane').textContent = JSON.stringify(r.technical ?? r, null, 2);
-    setStatus('Ready.');
-  } catch(e){ setStatus(e.message, true); addBubble('assistant', 'Sorry — I hit an error while processing your message.'); }
+    setStatus(r.fallback_reason ? 'Local model unavailable; limited fallback used.' : 'Ready.', Boolean(r.fallback_reason));
+  } catch(e){ setStatus(e.message, true); addBubble('assistant', 'Sorry — I hit an error while processing your message.'); } finally {setBusy(false);}
 }
 async function speakLast(){
   if(!lastReply?.assistant_text){ setStatus('No assistant reply yet.', true); return; }
+  const speech = lastReply.speech_text;
+  if(!speech){setStatus('No pronunciation-safe speech text available for this reply.',true);return;}
   setStatus('Generating audio reply…');
   try{
-    const r = await api('/speak', {text:lastReply.assistant_text, language:lastReply.language || 'aeb'});
+    const r = await api('/speak', {text:speech, language:lastReply.language || 'aeb'});
     audioPlayer.src = 'data:audio/wav;base64,' + r.audio_base64;
     await audioPlayer.play();
     setStatus('Playing reply.');
-  }catch(e){ setStatus(e.message, true); }
+  }catch(e){
+    const lang = {aeb:'ar', arq:'ar', ayl:'ar', ar:'ar', fr:'fr', en:'en', de:'de', tr:'tr'}[lastReply.language];
+    const synth = window.speechSynthesis;
+    const local = synth && synth.getVoices().find(v => v.localService && v.lang.toLowerCase().split('-')[0] === lang);
+    if (!local) {
+      setStatus('No compatible offline voice installed for this reply. Text chat still works.', true);
+      return;
+    }
+    const u = new SpeechSynthesisUtterance(speech);
+    u.voice = local; u.lang = local.lang;
+    u.onend = () => setStatus('Ready.');
+    u.onerror = () => setStatus('Local browser voice failed.', true);
+    synth.speak(u); setStatus('Playing local browser voice (generic).');
+  }
 }
 async function startRecording(){
   liveStream = await navigator.mediaDevices.getUserMedia({audio:true});
@@ -169,6 +192,8 @@ async function startRecording(){
   setStatus('Recording… press again to stop.');
 }
 async function transcribeAndSend(blob){
+  if(busy) return;
+  setBusy(true);
   setStatus('Transcribing voice…');
   try{
     const fd = new FormData();
@@ -179,10 +204,13 @@ async function transcribeAndSend(blob){
     $('debugPane').textContent = JSON.stringify(asr, null, 2);
     $('messageBox').value = asr.text || '';
     setStatus('Voice transcribed. Sending message…');
-    await sendText();
-  } catch(e){ setStatus(e.message, true); }
+    const hint = asr.language_hint || asr.asr_language;
+    setBusy(false);
+    await sendText(['aeb','fr','en','de','tr'].includes(hint) ? hint : null);
+    if(lastReply?.speech_text) await speakLast();
+  } catch(e){ setStatus(e.message, true); } finally {setBusy(false);}
 }
-$('sendBtn').onclick = sendText;
+$('sendBtn').onclick = ()=>sendText();
 $('speakLast').onclick = speakLast;
 $('newChat').onclick = ()=>{ history=[]; lastReply=null; chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
 $('messageBox').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendText(); } });
