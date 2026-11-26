@@ -1,5 +1,5 @@
 """Local-first conversational orchestration, separate from AFI facts."""
-import re
+import re, time
 from .semantic import understand
 from .responses import reply
 from .llm import conversational_reply
@@ -42,7 +42,10 @@ def choose_style(text, language, style):
     return 'arabic'
 
 def chat_turn(text, language='auto', history=None, backend='baseline', style='auto'):
+    started = time.perf_counter()
+    timings = {}
     result = understand(text, language, history, 'baseline', style)
+    timings['analysis_s'] = round(time.perf_counter()-started,3)
     norm = re.sub(r'[\s!?.؟،*]+$', '', text.strip().casefold()).strip()
     greeting = GREETINGS.get(norm)
     chosen = result['language'] or result['language_detection']['best_guess'] or 'aeb'
@@ -52,21 +55,37 @@ def chat_turn(text, language='auto', history=None, backend='baseline', style='au
     used = 'baseline'
     speech_text = None
     domain = bool(DOMAIN.search(text)) or any(result['intent']['matches'].get(k) for k in ('availability','price','documents','procedure','surface','deadline','incentives'))
+    # General project-start requests need a relevant follow-up, not ungrounded facts.
+    project = bool(re.search(r'(?:مشروع|\bprojet\b|\bproject\b|machrou3|machroua|proje|projekt)',text,re.I))
     if greeting and (language == 'auto' or language == greeting[0]):
         chosen, response_style, answer, speech_text = greeting
         used = 'greeting'
+    elif project and not domain and chosen == 'aeb':
+        if response_style == 'arabizi':
+            answer = 'Ey, najjem n3awnek. Chnowa naw3 el machrou3 elli t7eb ta3mlou?'
+            speech_text = 'إي، نجم نعاونك. شنوة نوع المشروع اللي تحب تعملو؟'
+        else:
+            answer = speech_text = 'إي، نجم نعاونك. شنوة نوع المشروع اللي تحب تعملو؟'
+        used = 'guided'
     else:
         if backend == 'ollama' and not domain:
             try:
                 proposed, model = conversational_reply(text, history or [], chosen, response_style)
+                timings.update(proposed.get('_timing', {}))
                 if language == 'auto':
                     chosen = proposed['language']
                 response_style = choose_style(text, chosen, style)
                 if proposed['category'] == 'social' and (language == 'auto' or proposed['language'] == language):
                     answer = proposed['reply']
-                    speech_text = proposed['speech_text']
-                    if chosen in ('aeb','ar','arq','ayl') and script(speech_text) != 'arabic' and script(speech_text) != 'mixed':
-                        speech_text = None
+                    speech_text = proposed['speech_text'] or (answer if response_style != 'arabizi' else None)
+                    if chosen in ('aeb','ar','arq','ayl'):
+                        if response_style != 'arabizi' and script(answer) not in ('arabic','mixed'):
+                            if speech_text and script(speech_text) in ('arabic','mixed'):
+                                answer = speech_text
+                            else:
+                                raise ValueError('Model returned wrong script')
+                        if speech_text and script(speech_text) not in ('arabic','mixed'):
+                            speech_text = None
                     used = 'ollama'
                 else:
                     domain = proposed['category'] == 'domain'
@@ -74,7 +93,7 @@ def chat_turn(text, language='auto', history=None, backend='baseline', style='au
                 failure = type(exc).__name__ + ': local conversational model unavailable'
         if used == 'baseline':
             if domain:
-                if backend != 'baseline' and not model:
+                if backend != 'baseline' and not model and (result['intent']['needs_confirmation'] or not result['language']):
                     result = understand(text, language, history, backend, style)
                     chosen = result['language'] or chosen
                     response_style = choose_style(text, chosen, style)
@@ -87,8 +106,9 @@ def chat_turn(text, language='auto', history=None, backend='baseline', style='au
                 choices = CLARIFY[chosen]
                 answer = choices[-1] if response_style == 'arabizi' else choices[0]
                 speech_text = choices[0]
-    return {'user_text':text,'assistant_text':answer,'language':chosen,
-            'detected_language': chosen if used in ('greeting','ollama') else result['language'],
+    timings['total_s'] = round(time.perf_counter()-started,3)
+    return {'timing':timings,'user_text':text,'assistant_text':answer,'language':chosen,
+            'detected_language': chosen if used in ('greeting','guided','ollama') else result['language'],
             'needs_language_confirmation':False if used in ('greeting','ollama') else result['needs_language_confirmation'],
             'response_style':response_style,'speech_text':speech_text or (answer if response_style != 'arabizi' else None),
             'intent':result['intent'],'semantic_backend':used,

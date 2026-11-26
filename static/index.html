@@ -127,52 +127,59 @@ async function api(path, body, form=false){
 async function loadCapabilities(){
   try{
     const c = await fetch('/capabilities').then(r=>r.json());
-    $('modeLine').textContent = `v${c.version || '0.4.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. Offline speech depends on installed voices.`;
+    $('modeLine').textContent = `v${c.version || '0.5.0'} · ${c.ollama_model ? 'Local model: '+c.ollama_model : 'Limited local fallback (no model found)'}. Offline speech depends on installed voices.`;
     $('backend').value = 'auto';
   }catch(e){ $('modeLine').textContent = 'Running with local defaults.'; }
 }
-async function sendText(languageHint=null){
+async function sendText(languageHint=null,voiceTiming=null){
   if(busy) return;
   const text = $('messageBox').value.trim();
   if(!text) return;
   setBusy(true);
   addBubble('user', text);
   $('messageBox').value='';
+  lastReply=null;
+  const started=performance.now();
   setStatus('Thinking…');
   try{
     const r = await api('/chat', {text, language:$('lang').value==='auto' && languageHint ? languageHint : $('lang').value, backend:$('backend').value, history});
     history = [...history, text].slice(-6);
     lastReply = r;
-    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.model ? ' · '+r.model : ''}`;
+    const total=(performance.now()-started)/1000;
+    const timing = {chat_seconds:total, asr_seconds:voiceTiming, ...r.timing};
+    const meta = `Language: ${r.language}${r.semantic_backend ? ' · backend: '+r.semantic_backend : ''}${r.model ? ' · '+r.model : ''} · ${total.toFixed(1)} s${voiceTiming != null ? ' (+ '+voiceTiming.toFixed(1)+' s speech)' : ''}`;
     addBubble('assistant', r.assistant_text || 'No answer produced.', meta);
-    $('debugPane').textContent = JSON.stringify(r.technical ?? r, null, 2);
+    $('debugPane').textContent = JSON.stringify({timing, ...r}, null, 2);
     setStatus(r.fallback_reason ? 'Local model unavailable; limited fallback used.' : 'Ready.', Boolean(r.fallback_reason));
+    return r;
   } catch(e){ setStatus(e.message, true); addBubble('assistant', 'Sorry — I hit an error while processing your message.'); } finally {setBusy(false);}
 }
-async function speakLast(){
-  if(!lastReply?.assistant_text){ setStatus('No assistant reply yet.', true); return; }
-  const speech = lastReply.speech_text;
-  if(!speech){setStatus('No pronunciation-safe speech text available for this reply.',true);return;}
-  setStatus('Generating audio reply…');
-  try{
-    const r = await api('/speak', {text:speech, language:lastReply.language || 'aeb'});
-    audioPlayer.src = 'data:audio/wav;base64,' + r.audio_base64;
-    await audioPlayer.play();
-    setStatus('Playing reply.');
-  }catch(e){
-    const lang = {aeb:'ar', arq:'ar', ayl:'ar', ar:'ar', fr:'fr', en:'en', de:'de', tr:'tr'}[lastReply.language];
-    const synth = window.speechSynthesis;
-    const local = synth && synth.getVoices().find(v => v.localService && v.lang.toLowerCase().split('-')[0] === lang);
-    if (!local) {
-      setStatus('No compatible offline voice installed for this reply. Text chat still works.', true);
-      return;
-    }
-    const u = new SpeechSynthesisUtterance(speech);
-    u.voice = local; u.lang = local.lang;
-    u.onend = () => setStatus('Ready.');
-    u.onerror = () => setStatus('Local browser voice failed.', true);
-    synth.speak(u); setStatus('Playing local browser voice (generic).');
+async function speakLast(reply=lastReply){
+  if(!reply?.assistant_text){setStatus('No assistant reply yet.',true);return;}
+  const speech=reply.speech_text;
+  if(!speech){setStatus('No pronunciation-safe speech text available.',true);return;}
+  const started=performance.now();
+  const lang={aeb:'ar',arq:'ar',ayl:'ar',ar:'ar',fr:'fr',en:'en',de:'de',tr:'tr'}[reply.language];
+  const synth=window.speechSynthesis;
+  const local=synth && synth.getVoices().find(v=>v.localService && v.lang.toLowerCase().split('-')[0]===lang);
+  if(local){
+    audioPlayer.pause(); synth.cancel();
+    const u=new SpeechSynthesisUtterance(speech);
+    u.voice=local;u.lang=local.lang;
+    u.onend=()=>{if(lastReply===reply && !busy)setStatus('Ready.');};
+    u.onerror=()=>{if(lastReply===reply && !busy)setStatus('Local voice unavailable. Text chat still works.',true);};
+    synth.speak(u);
+    if(lastReply===reply)setStatus('Playing offline browser voice (generic).');
+    return;
   }
+  setStatus('Preparing offline audio…');
+  try{
+    const r=await api('/speak',{text:speech,language:reply.language});
+    if(lastReply!==reply)return;
+    audioPlayer.src='data:audio/wav;base64,'+r.audio_base64;
+    await audioPlayer.play();
+    if(!busy)setStatus('Playing reply · audio ready in '+((performance.now()-started)/1000).toFixed(1)+' s.');
+  }catch(e){if(lastReply===reply && !busy)setStatus('No compatible offline voice. Text chat still works.',true);}
 }
 async function startRecording(){
   liveStream = await navigator.mediaDevices.getUserMedia({audio:true});
@@ -194,6 +201,7 @@ async function startRecording(){
 async function transcribeAndSend(blob){
   if(busy) return;
   setBusy(true);
+  const started=performance.now();
   setStatus('Transcribing voice…');
   try{
     const fd = new FormData();
@@ -206,13 +214,13 @@ async function transcribeAndSend(blob){
     setStatus('Voice transcribed. Sending message…');
     const hint = asr.language_hint || asr.asr_language;
     setBusy(false);
-    await sendText(['aeb','fr','en','de','tr'].includes(hint) ? hint : null);
-    if(lastReply?.speech_text) await speakLast();
+    const reply = await sendText(['aeb','fr','en','de','tr'].includes(hint) ? hint : null, (performance.now()-started)/1000);
+    if(reply?.speech_text) void speakLast(reply);
   } catch(e){ setStatus(e.message, true); } finally {setBusy(false);}
 }
 $('sendBtn').onclick = ()=>sendText();
-$('speakLast').onclick = speakLast;
-$('newChat').onclick = ()=>{ history=[]; lastReply=null; chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
+$('speakLast').onclick = ()=>speakLast();
+$('newChat').onclick = ()=>{ history=[]; lastReply=null; audioPlayer.pause(); window.speechSynthesis?.cancel(); chatLog.innerHTML=''; $('debugPane').textContent='No request yet.'; addBubble('assistant', 'Marhbé! I am ready. You can type or press the mic and speak naturally.'); setStatus('Conversation cleared.'); };
 $('messageBox').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendText(); } });
 $('micBtn').onclick = async ()=>{
   try{

@@ -3,7 +3,7 @@ from functools import lru_cache
 from pathlib import Path
 ASR={'tn-small':'TheBiggyBang/whisper-small-tunisian-derja-ct2','tn-whisperx':'montachouig/whisperX-tunisian','small':'small','turbo':'turbo','large-v3':'large-v3','tn-codeswitch':'oddadmix/Whisperv3-tunisian-codeswitch'}
 LOCK=threading.RLock()
-@lru_cache(maxsize=1)
+@lru_cache(maxsize=2)
 def model(key):
     from faster_whisper import WhisperModel
     prepared=Path(__file__).resolve().parents[1]/'models'/key
@@ -25,9 +25,11 @@ def transcribe(path,key='tn-small',language='auto'):
     with LOCK:
         start=time.perf_counter(); m=model(key); load=time.perf_counter()-start; start=time.perf_counter()
         seg,info=m.transcribe(audio,language=forced,task='transcribe',beam_size=int(os.getenv('ASR_BEAM_SIZE','3')),vad_filter=True,condition_on_previous_text=False)
-        text=' '.join(s.text.strip() for s in seg).strip(); elapsed=time.perf_counter()-start
+        segments=list(seg); text=' '.join(s.text.strip() for s in segments).strip(); elapsed=time.perf_counter()-start
+        logprobs=[s.avg_logprob for s in segments if getattr(s,'avg_logprob',None) is not None]
+        mean_logprob=sum(logprobs)/len(logprobs) if logprobs else None
     if not text: raise ValueError('No speech recognized')
-    return dict(text=text,model=key,asr_language=info.language,language_probability=info.language_probability,duration_s=len(audio)/16000,load_s=load,inference_s=elapsed,rtf=elapsed/(len(audio)/16000))
+    return dict(text=text,model=key,avg_logprob=mean_logprob,asr_language=info.language,language_probability=info.language_probability,duration_s=len(audio)/16000,load_s=load,inference_s=elapsed,rtf=elapsed/(len(audio)/16000))
 
 def route_asr(path,language='auto',key=None):
     # Detect general language before considering a dialect-specific model.
@@ -49,7 +51,9 @@ def route_asr(path,language='auto',key=None):
     # Keep confidently non-Tunisian Arabic untouched.
     if detected['label'] in ('ar','arq','ayl'):
         return dict(general,fallback=False)
-    if detected['best_guess']=='aeb':
+    # Avoid a second complete decode for clear transcripts in the interactive path.
+    # The confidence heuristic is not calibrated; full refinement is configurable.
+    if detected['best_guess']=='aeb' and (os.getenv('ASR_REFINE_TUNISIAN','low_confidence')=='always' or general.get('avg_logprob') is None or general['avg_logprob'] < -0.65):
         try:
             refined = transcribe(path,'tn-small','aeb')
             return dict(refined,fallback=False,initial_model='small',initial_text=general['text'],language_hint='aeb')
