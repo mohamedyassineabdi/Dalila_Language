@@ -1,7 +1,7 @@
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv(Path(__file__).resolve().parent / ".env")
-import tempfile, os, base64
+import tempfile, os, base64, time
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
@@ -12,7 +12,7 @@ from dalila.engines import route_asr, speak
 from dalila.llm import installed_ollama_model
 from dalila.chat import chat_turn
 
-app = FastAPI(title="Dalila Language Lab", version="0.4.0")
+app = FastAPI(title="Dalila Language Lab", version="0.5.0")
 ROOT = Path(__file__).parent
 
 
@@ -115,7 +115,9 @@ def audio(file: UploadFile = File(...), language: str = Form('auto'), model: str
                     if size > 20 * 1024 * 1024:
                         raise HTTPException(413, 'Maximum audio upload 20 MB')
                     f.write(chunk)
-            return route_asr(path, language, None if model == 'auto' else model)
+            started = time.perf_counter()
+            result = route_asr(path, language, None if model == 'auto' else model)
+            return dict(result, total_s=round(time.perf_counter()-started,3))
     except HTTPException:
         raise
     except Exception as e:

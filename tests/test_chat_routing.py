@@ -58,3 +58,39 @@ def test_auto_cloud_disabled(monkeypatch):
     monkeypatch.setenv('GEMINI_API_KEY','fake')
     monkeypatch.setenv('GEMINI_MODEL','fake')
     assert choose_semantic_backend()=='baseline'
+
+
+def test_chat_timing_and_script(monkeypatch):
+    monkeypatch.setattr('dalila.chat.conversational_reply',lambda *a:({'language':'aeb','category':'social','reply':'Ahla bik','speech_text':'أهلا بيك','_timing':{'llm_s':0.1}},'qwen3:4b'))
+    r=chat_turn('تحكي بالتونسي؟','aeb',backend='ollama')
+    assert r['assistant_text']=='أهلا بيك' and r['timing']['llm_s']==0.1
+    assert r['timing']['total_s']>=0
+
+def test_project_clarification():
+    r=chat_turn('نحب نحل مشروع صغير تنجم تعاوني','aeb')
+    assert 'نوع المشروع' in r['assistant_text'] and r['semantic_backend']=='guided'
+
+def test_confident_domain_does_not_need_model(monkeypatch):
+    monkeypatch.setattr('dalila.llm.semantic_json',lambda *a:pytest.fail('unnecessary LLM call'))
+    r=chat_turn('Quel est le prix ?', 'fr', backend='ollama')
+    assert 'prix' in r['assistant_text']
+
+def test_fast_asr_avoids_second_decode(monkeypatch):
+    monkeypatch.setenv('ASR_REFINE_TUNISIAN','low_confidence')
+    calls=[]
+    def transcribe(path,key,language):
+        calls.append(key)
+        return {'text':'نحب نعرف شنوة يلزمني','asr_language':'ar','avg_logprob':-0.2,'model':key}
+    monkeypatch.setattr(engines,'transcribe',transcribe)
+    monkeypatch.setattr('dalila.semantic.detect',lambda text:{'label':'aeb','best_guess':'aeb'})
+    assert engines.route_asr('fake')['model']=='small' and calls==['small']
+
+def test_uncertain_asr_refines(monkeypatch):
+    monkeypatch.setenv('ASR_REFINE_TUNISIAN','low_confidence')
+    calls=[]
+    def transcribe(path,key,language):
+        calls.append(key)
+        return {'text':'نحب نعرف شنوة يلزمني','asr_language':'ar','avg_logprob':-0.9,'model':key}
+    monkeypatch.setattr(engines,'transcribe',transcribe)
+    monkeypatch.setattr('dalila.semantic.detect',lambda text:{'label':'aeb','best_guess':'aeb'})
+    assert engines.route_asr('fake')['model']=='tn-small' and calls==['small','tn-small']
